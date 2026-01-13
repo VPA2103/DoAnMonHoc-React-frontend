@@ -1,0 +1,45 @@
+.contact-page {
+  padding: 40px 80px;
+}
+
+.contact-info {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.contact-map {
+  width: 100%;
+  height: 350px;
+  border: none;
+  margin-bottom: 30px;
+}
+
+.contact-form h3 {
+  margin-bottom: 16px;
+}
+
+.contact-form .row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.contact-form textarea {
+  height: 120px;
+  margin-bottom: 12px;
+}
+
+.contact-form button {
+  background: #f6b100;
+  border: none;
+  padding: 10px 24px;
+  cursor: pointer;
+}

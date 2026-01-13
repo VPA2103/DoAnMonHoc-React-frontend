@@ -20,7 +20,9 @@ const Header = () => {
             <i className="bi bi-heart"></i>
             <i className="bi bi-chat"></i>
             <i className="bi bi-bell"></i>
-            <i className="bi bi-person"></i>
+            <a href="/register" className="text-white">
+              <i className="bi bi-person"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -30,7 +32,7 @@ const Header = () => {
         <div className="container">
           <ul className="nav">
             <li className="nav-item">
-              <a className="nav-link text-dark" href="#">
+              <a className="nav-link text-dark" href="/">
                 Trang chủ
               </a>
             </li>
@@ -48,7 +50,7 @@ const Header = () => {
               </ul>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-dark" href="#">
+              <a className="nav-link text-dark" href="/contact">
                 Trang liên hệ
               </a>
             </li>
