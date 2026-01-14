@@ -1,4 +1,5 @@
 import React from "react";
+import { logout } from "../utils/auth";
 
 const Header = () => {
   return (
@@ -23,6 +24,9 @@ const Header = () => {
             <a href="/register" className="text-white">
               <i className="bi bi-person"></i>
             </a>
+            <button className="btn btn-danger" onClick={logout}>
+              Đăng xuất
+            </button>
           </div>
         </div>
       </div>
@@ -45,8 +49,16 @@ const Header = () => {
                 Blog
               </a>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Bài viết</a></li>
-                <li><a className="dropdown-item" href="#">Chia sẻ</a></li>
+                <li>
+                  <a className="dropdown-item" href="#">
+                    Bài viết
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="#">
+                    Chia sẻ
+                  </a>
+                </li>
               </ul>
             </li>
             <li className="nav-item">
