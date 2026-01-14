@@ -50,7 +50,6 @@ const Login = () => {
         throw new Error("Dữ liệu đăng nhập không hợp lệ");
       }
 
-      // 🔥 LƯU ĐÚNG CHUẨN
       login(token, user);
 
       toast.success("Đăng nhập thành công 🚀");
@@ -59,7 +58,7 @@ const Login = () => {
         if (user.vai_tro === "admin") {
           navigate("/admin", { replace: true });
         } else {
-          navigate("/user/profile", { replace: true });
+          navigate("/", { replace: true });
         }
       }, 800);
     } catch (err) {

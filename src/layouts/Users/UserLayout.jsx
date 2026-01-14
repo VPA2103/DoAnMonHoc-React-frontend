@@ -3,12 +3,11 @@ import { Outlet } from "react-router-dom";
 import { BsGear, BsShare } from "react-icons/bs";
 import { FaInstagram } from "react-icons/fa"; // Dùng icon react-icons cho đồng bộ
 import UserProfileTab from "../../components/UserProfile/UserProfileTab"; // Đảm bảo đường dẫn đúng
+import { useAuth } from "../../context/useAuth";
 
 const UserLayout = () => {
-  const avatarUrl =
-    "https://res.cloudinary.com/dtuffzxyb/image/upload/v1767074639/nhanvien/q6deixcj1sxspzn8cnkn.png";
-
-  // Style cho nút phụ (Promote, Share, Setting)
+  const { user } = useAuth();
+  if (!user) return null;
   const secondaryBtnStyle = {
     backgroundColor: "#2F2F2F",
     color: "white",
@@ -29,7 +28,7 @@ const UserLayout = () => {
               }}
             >
               <img
-                src={avatarUrl}
+                src={user.anh_dai_dien}
                 alt="Avatar"
                 className="w-100 h-100 object-fit-cover"
               />
@@ -37,10 +36,7 @@ const UserLayout = () => {
           </div>
 
           <div className="flex-grow-1 w-100">
-            <h2 className="fw-bold mb-1">
-              vpa_2103{" "}
-              <small className="fw-normal fs-6 text-white-50 ms-1">.VPA</small>
-            </h2>
+            <h2 className="fw-bold mb-1">{user.ten_nguoi_dung}</h2>
 
             <div className="d-flex align-items-center gap-2 mb-3 mt-2">
               <button

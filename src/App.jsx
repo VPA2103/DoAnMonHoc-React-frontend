@@ -37,7 +37,6 @@ function App() {
           </Route>
         </Route>
 
-        {/* User */}
         <Route element={<RoleRoute allowedRoles={["user"]} />}>
           <Route path="/user" element={<UserLayout />}>
             <Route path="profile" element={<div>Videos</div>} />

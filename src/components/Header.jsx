@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 const Header = () => {
-
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -38,15 +37,14 @@ const Header = () => {
             <i className="bi bi-heart"></i>
             <i className="bi bi-chat"></i>
             <i className="bi bi-bell"></i>
-            
 
             {user ? (
-              <span
+              <a
                 className="text-white cursor-pointer fw-semibold"
                 onClick={handleUserClick}
               >
-                {user.ten}
-              </span>
+                {user.ten_nguoi_dung}
+              </a>
             ) : (
               <i
                 className="bi bi-person"
