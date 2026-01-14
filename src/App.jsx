@@ -16,15 +16,14 @@ import PublicRoute from "./routes/PublicRoute";
 
 import AdminLayout from "./layouts/Admin/AdminLayout";
 import UserLayout from "./layouts/Users/UserLayout";
+import RoleRoute from "./routes/RoleRoute";
 
 function App() {
   return (
     <>
       <Header />
-      <ToastContainer position="top-right" autoClose={3000} />
 
       <Routes>
-        {/* Public */}
         <Route path="/" element={<HomePage />} />
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
@@ -32,17 +31,16 @@ function App() {
         </Route>
         <Route path="/contact" element={<Contact />} />
 
-        {/* Admin */}
-        <Route element={<PrivateRoute role="admin" />}>
+        <Route element={<RoleRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<div>Trang quản trị</div>} />
           </Route>
         </Route>
 
         {/* User */}
-        <Route element={<PrivateRoute role="user" />}>
+        <Route element={<RoleRoute allowedRoles={["user"]} />}>
           <Route path="/user" element={<UserLayout />}>
-            <Route path="videos" element={<div>Videos</div>} />
+            <Route path="profile" element={<div>Videos</div>} />
             <Route path="reposts" element={<div>Reposts</div>} />
             <Route path="favorites" element={<div>Favorites</div>} />
           </Route>
