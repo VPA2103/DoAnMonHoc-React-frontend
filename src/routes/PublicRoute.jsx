@@ -1,8 +1,9 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
-const PublicRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
-  return token ? <Navigate to="/" /> : children;
+const PublicRoute = () => {
+  const { user } = useAuth();
+  return user ? <Navigate to="/" replace /> : <Outlet />;
 };
 
 export default PublicRoute;

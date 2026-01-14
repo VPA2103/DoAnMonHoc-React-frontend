@@ -1,7 +1,24 @@
 import React from "react";
-import { logout } from "../utils/auth";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 const Header = () => {
+
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const handleUserClick = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    if (user.vai_tro === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/user/videos");
+    }
+  };
   return (
     <>
       {/* Top header */}
@@ -21,12 +38,17 @@ const Header = () => {
             <i className="bi bi-heart"></i>
             <i className="bi bi-chat"></i>
             <i className="bi bi-bell"></i>
-            <a href="/register" className="text-white">
-              <i className="bi bi-person"></i>
-            </a>
-            <button className="btn btn-danger" onClick={logout}>
-              Đăng xuất
-            </button>
+            <i
+              className="bi bi-person cursor-pointer"
+              style={{ cursor: "pointer" }}
+              onClick={handleUserClick}
+            ></i>
+
+            {user && (
+              <button className="btn btn-danger btn-sm" onClick={logout}>
+                Đăng xuất
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -36,40 +58,40 @@ const Header = () => {
         <div className="container">
           <ul className="nav">
             <li className="nav-item">
-              <a className="nav-link text-dark" href="/">
+              <Link className="nav-link text-dark" to="/">
                 Trang chủ
-              </a>
+              </Link>
             </li>
             <li className="nav-item dropdown">
-              <a
+              <Link
                 className="nav-link dropdown-toggle text-dark"
                 data-bs-toggle="dropdown"
-                href="#"
+                to="#"
               >
                 Blog
-              </a>
+              </Link>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <Link className="dropdown-item" to="#">
                     Bài viết
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <Link className="dropdown-item" to="#">
                     Chia sẻ
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-dark" href="/contact">
+              <Link className="nav-link text-dark" to="/contact">
                 Trang liên hệ
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-dark" href="#">
+              <Link className="nav-link text-dark" to="#">
                 Danh sách công thức
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

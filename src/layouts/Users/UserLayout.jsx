@@ -1,19 +1,20 @@
-import { Outlet } from "react-router-dom";
-import HeaderUserProfile from "../../components/UserProfile/HeaderUserProfile";
-import UserProfileTab from "../../components/UserProfile/UserProfileTab";
+import { Outlet, NavLink } from "react-router-dom";
 
-export default function UserLayout() {
+const UserLayout = () => {
   return (
-    <>
-      <div className="bg-black text-white min-h-screen">
-        <div className="container py-4" style={{ maxWidth: "1000px" }}>
-          {/* Header Section */}
-          <HeaderUserProfile />
-          {/* Tabs */}
-          <UserProfileTab />
-          <Outlet />
-        </div>
-      </div>
-    </>
+    <div className="container py-4">
+      <nav className="mb-3">
+        <NavLink to="/user/videos" className="me-3">
+          Videos
+        </NavLink>
+        <NavLink to="/user/reposts" className="me-3">
+          Reposts
+        </NavLink>
+        <NavLink to="/user/favorites">Favorites</NavLink>
+      </nav>
+      <Outlet />
+    </div>
   );
-}
+};
+
+export default UserLayout;

@@ -10,13 +10,12 @@ export default function UserProfileTab() {
     <ul className="nav nav-tabs border-secondary mb-3 border-bottom">
       <li className="nav-item">
         <NavLink
-          to="/user/videos" // Đúng: Khớp với App.js (/user) + UserRoutes (profile/videos)
+          to="/user/videos"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Bài đăng
         </NavLink>
       </li>
-      {/* ... Các tab khác giữ nguyên ... */}
       <li className="nav-item">
         <NavLink
           to="/user/reposts"
