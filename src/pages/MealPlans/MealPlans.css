@@ -1,0 +1,21 @@
+.mealplan-card {
+  transition: transform 0.12s ease-in-out;
+}
+
+.mealplan-card:hover {
+  transform: translateY(-3px);
+}
+
+.mealplan-detail h3 {
+  margin-bottom: 0.25rem;
+}
+
+.mealplan-detail .card {
+  border: 1px solid #f0f0f0;
+}
+
+@media (max-width: 576px) {
+  .mealplan-card .card-body {
+    padding: 0.8rem;
+  }
+}

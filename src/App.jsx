@@ -10,9 +10,15 @@ import HomePage from "./pages/Home/HomePage";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Contact from "./pages/Contact/Contact";
+import MealPlans from "./pages/MealPlans/MealPlans";
+import MealPlanPage from "./pages/MealPlans/MealPlanDetail";
+import Recipes from "./pages/Recipes/Recipes";
+import RecipeDetailPage from "./pages/Recipes/RecipeDetailPage";
+import { PATH } from "./constants/paths";
 
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
+import { MealPlanProvider } from "./context/MealPlanContext";
 
 import AdminLayout from "./layouts/Admin/AdminLayout";
 import UserLayout from "./layouts/Users/UserLayout";
@@ -23,6 +29,7 @@ function App() {
       <Header />
       <ToastContainer position="top-right" autoClose={3000} />
 
+      <MealPlanProvider>
       <Routes>
         {/* Public */}
         <Route path="/" element={<HomePage />} />
@@ -30,6 +37,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
+        <Route path={PATH.MEAL_PLANS} element={<MealPlans />} />
+        <Route path={PATH.MEAL_PLAN_DETAIL} element={<MealPlanPage />} />
+        <Route path={PATH.RECIPES} element={<Recipes />} />
+        <Route path={PATH.RECIPE_DETAIL} element={<RecipeDetailPage />} />
         <Route path="/contact" element={<Contact />} />
 
         {/* Admin */}
@@ -48,7 +59,7 @@ function App() {
           </Route>
         </Route>
       </Routes>
-
+      </MealPlanProvider>
       <Footer />
     </>
   );

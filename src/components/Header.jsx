@@ -89,8 +89,13 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-dark" to="#">
+              <Link className="nav-link text-dark" to="/recipes">
                 Danh sách công thức
+              </Link>
+            </li>
+             <li className="nav-item">
+              <Link className="nav-link text-dark" to="/meal-plans">
+                Kế hoạch bữa ăn
               </Link>
             </li>
           </ul>
