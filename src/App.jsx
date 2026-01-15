@@ -17,17 +17,18 @@ import PublicRoute from "./routes/PublicRoute";
 import AdminLayout from "./layouts/Admin/AdminLayout";
 import UserLayout from "./layouts/Users/UserLayout";
 import RoleRoute from "./routes/RoleRoute";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 
 function App() {
   return (
     <>
       <Header />
-
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Route>
         <Route path="/contact" element={<Contact />} />
 
