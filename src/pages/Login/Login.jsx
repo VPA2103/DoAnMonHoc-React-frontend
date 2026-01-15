@@ -1,8 +1,9 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { useAuth } from "../../context/useAuth";
+
 import {
   FaEnvelope,
   FaLock,
@@ -10,10 +11,12 @@ import {
   FaEyeSlash,
   FaUserCircle,
 } from "react-icons/fa";
-import "react-toastify/dist/ReactToastify.css"; // Đừng quên import CSS của toastify
+
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth(); // 🔥 LẤY TỪ CONTEXT
 
   const [formData, setFormData] = useState({
     email: "",
@@ -21,7 +24,7 @@ const Login = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // State để ẩn/hiện mật khẩu
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,34 +39,31 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login", {
+      const res = await axios.post("http://127.0.0.1:8000/api/login", {
         email: formData.email,
         password: formData.password,
       });
 
-      if (response.status !== 200 || !response.data?.token) {
-        throw new Error("Token không hợp lệ");
+      const { token, user } = res.data;
+
+      if (!token || !user) {
+        throw new Error("Dữ liệu đăng nhập không hợp lệ");
       }
 
-      const token = response.data.token;
-      const decoded = jwtDecode(token);
+      login(token, user);
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", decoded.role);
+      toast.success("Đăng nhập thành công 🚀");
 
-      toast.success("Đăng nhập thành công! 🚀");
-
-      // Đợi 1 chút để user đọc thông báo rồi mới chuyển trang
       setTimeout(() => {
-        if (decoded.role === "admin") {
+        if (user.vai_tro === "admin") {
           navigate("/admin", { replace: true });
         } else {
           navigate("/", { replace: true });
         }
-      }, 1000);
-    } catch (error) {
+      }, 800);
+    } catch (err) {
       toast.error(
-        error.response?.data?.message || "Email hoặc mật khẩu không đúng!"
+        err.response?.data?.message || "Email hoặc mật khẩu không đúng"
       );
     } finally {
       setIsLoading(false);
@@ -74,129 +74,59 @@ const Login = () => {
     <div className="login-page d-flex justify-content-center align-items-center vh-100">
       <ToastContainer position="top-right" autoClose={2000} />
 
-      {/* Background Styling Inline (hoặc bạn có thể để trong file CSS riêng) */}
-      <style>
-        {`
-          .login-page {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          }
-          .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-          }
-          .form-control:focus {
-            box-shadow: none;
-            border-color: #764ba2;
-          }
-          .btn-custom {
-            background: linear-gradient(to right, #667eea, #764ba2);
-            border: none;
-            color: white;
-            transition: transform 0.2s;
-          }
-          .btn-custom:hover {
-            transform: translateY(-2px);
-            color: white;
-            opacity: 0.9;
-          }
-        `}
-      </style>
-
       <div
-        className="card glass-card shadow-lg p-4 p-md-5"
+        className="card shadow-lg p-4"
         style={{ width: "100%", maxWidth: "450px" }}
       >
         <div className="text-center mb-4">
-          <div className="mb-3 text-primary" style={{ fontSize: "3rem" }}>
-            <FaUserCircle />
-          </div>
+          <FaUserCircle size={60} className="text-primary" />
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="form-label fw-semibold">Email</label>
-            <div className="input-group">
-              <span className="input-group-text bg-white border-end-0">
-                <FaEnvelope className="text-secondary" />
-              </span>
-              <input
-                type="email"
-                name="email"
-                className="form-control border-start-0 ps-0"
-                placeholder="name@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="mb-3">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
 
-          <div className="mb-2">
-            <label className="form-label fw-semibold">Mật khẩu</label>
+          <div className="mb-3">
+            <label>Mật khẩu</label>
             <div className="input-group">
-              <span className="input-group-text bg-white border-end-0">
-                <FaLock className="text-secondary" />
-              </span>
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                className="form-control border-start-0 border-end-0 ps-0"
-                placeholder="Nhập mật khẩu"
+                className="form-control"
                 value={formData.password}
                 onChange={handleChange}
                 required
               />
               <span
-                className="input-group-text bg-white border-start-0 cursor-pointer"
+                className="input-group-text"
                 style={{ cursor: "pointer" }}
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? (
-                  <FaEyeSlash className="text-muted" />
-                ) : (
-                  <FaEye className="text-muted" />
-                )}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
           </div>
 
-          {/* Forgot Password Link */}
-          <div className="d-flex justify-content-end mb-4">
-            <a href="#" className="text-decoration-none small text-primary">
-              Quên mật khẩu?
-            </a>
-          </div>
-
-          {/* Submit Button */}
           <button
             type="submit"
-            className="btn btn-custom w-100 py-2 fw-bold shadow-sm"
+            className="btn btn-primary w-100"
             disabled={isLoading}
           >
-            {isLoading ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2"></span>
-                Đang xử lý...
-              </>
-            ) : (
-              "Đăng Nhập"
-            )}
+            {isLoading ? "Đang xử lý..." : "Đăng nhập"}
           </button>
         </form>
 
-        {/* Register Link */}
-        <div className="text-center mt-4">
-          <p className="text-muted small mb-0">
-            Chưa có tài khoản?{" "}
-            <Link
-              to="/register"
-              className="text-primary fw-bold text-decoration-none"
-            >
-              Đăng ký ngay
-            </Link>
-          </p>
+        <div className="text-center mt-3">
+          <Link to="/register">Chưa có tài khoản? Đăng ký</Link>
         </div>
       </div>
     </div>

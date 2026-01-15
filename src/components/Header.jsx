@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 const Header = () => {
-
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -16,7 +15,7 @@ const Header = () => {
     if (user.vai_tro === "admin") {
       navigate("/admin");
     } else {
-      navigate("/user/videos");
+      navigate("/user/profile");
     }
   };
   return (
@@ -38,11 +37,21 @@ const Header = () => {
             <i className="bi bi-heart"></i>
             <i className="bi bi-chat"></i>
             <i className="bi bi-bell"></i>
-            <i
-              className="bi bi-person cursor-pointer"
-              style={{ cursor: "pointer" }}
-              onClick={handleUserClick}
-            ></i>
+
+            {user ? (
+              <a
+                className="text-white cursor-pointer fw-semibold"
+                onClick={handleUserClick}
+              >
+                {user.ten_nguoi_dung}
+              </a>
+            ) : (
+              <i
+                className="bi bi-person"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/login")}
+              ></i>
+            )}
 
             {user && (
               <button className="btn btn-danger btn-sm" onClick={logout}>
@@ -89,8 +98,13 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-dark" to="#">
+              <Link className="nav-link text-dark" to="/recipes">
                 Danh sách công thức
+              </Link>
+            </li>
+             <li className="nav-item">
+              <Link className="nav-link text-dark" to="/meal-plans">
+                Kế hoạch bữa ăn
               </Link>
             </li>
           </ul>
