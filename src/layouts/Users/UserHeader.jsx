@@ -1,0 +1,77 @@
+import { BsGear, BsShare } from "react-icons/bs";
+import { FaInstagram } from "react-icons/fa";
+
+const UserHeader = ({ user }) => {
+  const secondaryBtnStyle = {
+    backgroundColor: "#2F2F2F",
+    color: "white",
+    border: "none",
+  };
+
+  return (
+    <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start mb-4">
+      {/* Avatar */}
+      <div className="me-md-4 mb-3 mb-md-0">
+        <div
+          className="rounded-circle overflow-hidden d-flex justify-content-center align-items-center"
+          style={{
+            width: "116px",
+            height: "116px",
+            border: "1px solid #2F2F2F",
+          }}
+        >
+          <img
+            src={user.anh_dai_dien}
+            alt="Avatar"
+            className="w-100 h-100 object-fit-cover"
+          />
+        </div>
+      </div>
+
+      {/* Info */}
+      <div className="flex-grow-1 w-100">
+        <h2 className="fw-bold mb-1">{user.ten_nguoi_dung}</h2>
+
+        <div className="d-flex align-items-center gap-2 mb-3 mt-2">
+          <button
+            className="btn fw-semibold px-4 py-1 text-white"
+            style={{ backgroundColor: "#FE2C55", border: "none" }}
+          >
+            Edit profile
+          </button>
+
+          <button className="btn py-1 px-2" style={secondaryBtnStyle}>
+            <BsGear size={20} />
+          </button>
+
+          <button className="btn py-1 px-2" style={secondaryBtnStyle}>
+            <BsShare size={20} />
+          </button>
+        </div>
+
+        <div className="d-flex gap-4 mb-3 text-white-50">
+          <div>
+            <strong className="text-white">9995</strong> Following
+          </div>
+          <div>
+            <strong className="text-white">1057</strong> Followers
+          </div>
+          <div>
+            <strong className="text-white">729</strong> Likes
+          </div>
+        </div>
+
+        <p className="mb-1">Vào chốt đơn đi nào :&gt;</p>
+
+        <a
+          href="#"
+          className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-1"
+        >
+          <FaInstagram /> Instagram: vpa_healthy.beauty
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export default UserHeader;
