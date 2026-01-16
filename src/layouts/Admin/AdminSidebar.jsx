@@ -28,7 +28,7 @@ const AdminSidebar = () => {
               `nav-link text-white ${isActive ? "active bg-primary" : ""}`
             }
           >
-            Users
+            Quản lí người dùng
           </NavLink>
         </li>
 
@@ -53,6 +53,27 @@ const AdminSidebar = () => {
             Categories
           </NavLink>
         </li>
+        <li className="nav-item">
+          <NavLink
+            to="quanlidanhmuc"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? "active bg-primary" : ""}`
+            }
+          >
+            Quản lí danh mục
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink
+            to="quanlinguyenlieu"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? "active bg-primary" : ""}`
+            }
+          >
+            Quản lí nguyên liệu
+          </NavLink>
+        </li>
+        
       </ul>
     </div>
   );
