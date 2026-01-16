@@ -21,6 +21,8 @@ import AdminUsers from "../pages/Admin/AdminUsers";
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
 import { PATH } from "../constants/paths";
+import QuanLiDanhMuc from "../pages/Admin/QuanLiDanhMuc";
+import QuanLieuNguyenLieu from "../pages/Admin/QuanLyNguyenLieu";
 
 const AppRoutes = () => {
   return (
@@ -47,6 +49,8 @@ const AppRoutes = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
+          <Route path="quanlidanhmuc" element={<QuanLiDanhMuc />} />
+          <Route path="quanlinguyenlieu" element={<QuanLieuNguyenLieu />} />
         </Route>
       </Route>
 
