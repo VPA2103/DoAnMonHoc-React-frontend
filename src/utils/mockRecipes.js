@@ -1,11 +1,25 @@
 export const MOCK_RECIPES = [
-  { id: 1, name: 'Cháo yến mạch', calories: 300, description: 'Món ăn sáng lành mạnh với yến mạch và trái cây.', image: 'https://www.bing.com/ck/a?!&&p=9b4da368e13f51f153e51794c056ba53e8f4d5f0c3c49095face49471a99a077JmltdHM9MTc2ODM0ODgwMA&ptn=3&ver=2&hsh=4&fclid=0fe28e65-933b-6f25-3ace-9a94925d6e31&u=a1L2ltYWdlcy9zZWFyY2g_cT0lZTElYmElYTNuaCtjaCVjMyVhMW8reSVlMSViYSViZm4rbSVlMSViYSVhMWNoJmlkPTQyMEJEOENERDM0NkJENEIwNDBDOEIxRUU1NjJBREQyNTNBMUVBRDYmRk9STT1JQUNGSVI', rating: 4.5 },
-  { id: 2, name: 'Trứng luộc', calories: 80, description: 'Trứng luộc đơn giản, giàu protein.', image: 'https://via.placeholder.com/300x200?text=Tr%E1%BB%A9ng+lu%E1%BB%99c', rating: 4.0 },
-  { id: 3, name: 'Cơm gạo lứt', calories: 350, description: 'Cơm từ gạo lứt, tốt cho sức khỏe.', image: 'https://via.placeholder.com/300x200?text=C%C6%A1m+g%E1%BA%A1o+l%E1%BB%A9t', rating: 4.2 },
-  { id: 4, name: 'Ức gà nướng', calories: 220, description: 'Ức gà nướng với gia vị.', image: 'https://via.placeholder.com/300x200?text=%E1%BB%A8c+g%C3%A0+n%C6%B0%E1%BB%9Bng', rating: 4.8 },
-  { id: 5, name: 'Salad cá hồi', calories: 350, description: 'Salad tươi ngon với cá hồi.', image: 'https://via.placeholder.com/300x200?text=Salad+c%C3%A1+h%E1%BB%93i', rating: 4.7 },
-  { id: 6, name: 'Bánh mì nguyên cám', calories: 420, description: 'Bánh mì làm từ nguyên cám.', image: 'https://via.placeholder.com/300x200?text=B%C3%A1nh+m%C3%AC+nguy%C3%AAn+c%C3%A1m', rating: 4.3 },
-  { id: 7, name: 'Sinh tố chuối', calories: 250, description: 'Sinh tố từ chuối và sữa.', image: 'https://via.placeholder.com/300x200?text=Sinh+t%E1%BB%91+chu%E1%BB%91i', rating: 4.1 },
-  { id: 8, name: 'Thịt bò xào', calories: 320, description: 'Thịt bò xào rau củ.', image: 'https://via.placeholder.com/300x200?text=Th%E1%BB%8Bt+b%C3%B2+x%C3%A0o', rating: 4.6 },
-  { id: 9, name: 'Pasta cộng protein', calories: 600, description: 'Pasta với thêm protein.', image: 'https://via.placeholder.com/300x200?text=Pasta+c%E1%BB%99ng+protein', rating: 4.4 },
+  { id: 1, name: 'Cháo yến mạch', calories: 300, description: 'Món ăn sáng lành mạnh với yến mạch và trái cây.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.5, comments: [
+    { id: 1, user: 'Nguyen Van A', text: 'Món này rất ngon và dễ làm!', date: '2025-10-01' },
+    { id: 2, user: 'Tran Thi B', text: 'Tôi thích cách nấu này.', date: '2025-10-02' }
+  ] },
+  { id: 2, name: 'Trứng luộc', calories: 80, description: 'Trứng luộc đơn giản, giàu protein.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.0, comments: [
+    { id: 1, user: 'Le Van C', text: 'Đơn giản nhưng hiệu quả.', date: '2025-10-03' }
+  ] },
+  { id: 3, name: 'Cơm gạo lứt', calories: 350, description: 'Cơm từ gạo lứt, tốt cho sức khỏe.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.2, comments: [] },
+  { id: 4, name: 'Ức gà nướng', calories: 220, description: 'Ức gà nướng với gia vị.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.8, comments: [
+    { id: 1, user: 'Pham Thi D', text: 'Thịt gà mềm và ngon.', date: '2025-10-04' },
+    { id: 2, user: 'Hoang Van E', text: 'Gia vị vừa miệng.', date: '2025-10-05' }
+  ] },
+  { id: 5, name: 'Salad cá hồi', calories: 350, description: 'Salad tươi ngon với cá hồi.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.7, comments: [
+    { id: 1, user: 'Do Thi F', text: 'Cá hồi tươi ngon.', date: '2025-10-06' }
+  ] },
+  { id: 6, name: 'Bánh mì nguyên cám', calories: 420, description: 'Bánh mì làm từ nguyên cám.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.3, comments: [] },
+  { id: 7, name: 'Sinh tố chuối', calories: 250, description: 'Sinh tố từ chuối và sữa.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.1, comments: [
+    { id: 1, user: 'Vu Van G', text: 'Ngọt và bổ dưỡng.', date: '2025-10-07' }
+  ] },
+  { id: 8, name: 'Thịt bò xào', calories: 320, description: 'Thịt bò xào rau củ.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.6, comments: [
+    { id: 1, user: 'Bui Thi H', text: 'Thịt bò mềm.', date: '2025-10-08' }
+  ] },
+  { id: 9, name: 'Pasta cộng protein', calories: 600, description: 'Pasta với thêm protein.', image: 'https://tse1.mm.bing.net/th/id/OIP.r9nHgCyI0RFqra1aGuffvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3', rating: 4.4, comments: [] },
 ];
