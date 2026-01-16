@@ -6,55 +6,51 @@ const AdminSidebar = () => {
       className="bg-dark text-white p-3"
       style={{ width: "250px", minHeight: "100vh" }}
     >
-      <h5 className="text-center mb-4">BẾP VIỆT 4.0</h5>
+      <h5 className="text-center mb-4">ADMIN</h5>
 
       <ul className="nav nav-pills flex-column gap-1">
         <li className="nav-item">
           <NavLink
-            to="/admin"
+            to=""
             end
             className={({ isActive }) =>
               `nav-link text-white ${isActive ? "active bg-primary" : ""}`
             }
           >
-            <i className="bi bi-speedometer2 me-2"></i>
             Dashboard
           </NavLink>
         </li>
 
         <li className="nav-item">
           <NavLink
-            to="/admin/users"
+            to="users"
             className={({ isActive }) =>
               `nav-link text-white ${isActive ? "active bg-primary" : ""}`
             }
           >
-            <i className="bi bi-people me-2"></i>
-            Người dùng
+            Users
           </NavLink>
         </li>
 
         <li className="nav-item">
           <NavLink
-            to="/admin/recipes"
+            to="recipes"
             className={({ isActive }) =>
               `nav-link text-white ${isActive ? "active bg-primary" : ""}`
             }
           >
-            <i className="bi bi-journal-text me-2"></i>
-            Công thức
+            Recipes
           </NavLink>
         </li>
 
         <li className="nav-item">
           <NavLink
-            to="/admin/categories"
+            to="categories"
             className={({ isActive }) =>
               `nav-link text-white ${isActive ? "active bg-primary" : ""}`
             }
           >
-            <i className="bi bi-tags me-2"></i>
-            Danh mục
+            Categories
           </NavLink>
         </li>
       </ul>

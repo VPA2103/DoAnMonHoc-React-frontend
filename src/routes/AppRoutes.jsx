@@ -14,6 +14,10 @@ import RecipeDetailPage from "../pages/Recipes/RecipeDetailPage";
 import AdminLayout from "../layouts/Admin/AdminLayout";
 import UserLayout from "../layouts/Users/UserLayout";
 
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import AdminUsers from "../pages/Admin/AdminUsers";
+
+
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
 import { PATH } from "../constants/paths";
@@ -23,7 +27,7 @@ const AppRoutes = () => {
     <Routes>
       {/* 🌐 WEBSITE CHÍNH */}
       <Route element={<MainLayout />}>
-        <Route path="/" element={<HomePage />} />
+        <Route index element={<HomePage />} />
 
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
@@ -41,13 +45,15 @@ const AppRoutes = () => {
       {/* 🛠 ADMIN */}
       <Route element={<RoleRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<div>Trang quản trị</div>} />
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
         </Route>
       </Route>
 
       {/* 👤 USER */}
       <Route element={<RoleRoute allowedRoles={["user"]} />}>
         <Route path="/user" element={<UserLayout />}>
+          <Route index element={<div>Profile</div>} />
           <Route path="profile" element={<div>Profile</div>} />
           <Route path="reposts" element={<div>Reposts</div>} />
           <Route path="favorites" element={<div>Favorites</div>} />
