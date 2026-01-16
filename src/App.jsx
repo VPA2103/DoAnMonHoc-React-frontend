@@ -23,6 +23,7 @@ import { MealPlanProvider } from "./context/MealPlanContext";
 import AdminLayout from "./layouts/Admin/AdminLayout";
 import UserLayout from "./layouts/Users/UserLayout";
 import RoleRoute from "./routes/RoleRoute";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Route>
         <Route path={PATH.MEAL_PLANS} element={<MealPlans />} />
         <Route path={PATH.MEAL_PLAN_DETAIL} element={<MealPlanPage />} />

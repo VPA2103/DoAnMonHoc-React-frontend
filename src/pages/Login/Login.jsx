@@ -126,7 +126,10 @@ const Login = () => {
         </form>
 
         <div className="text-center mt-3">
-          <Link to="/register">Chưa có tài khoản? Đăng ký</Link>
+          Chưa có tài khoản?<Link to="/register"> Đăng ký</Link>
+        </div>
+        <div className="text-center mt-3">
+          <Link to="/forgot-password"> Quên mật khẩu?</Link>
         </div>
       </div>
     </div>

@@ -65,12 +65,10 @@ const UserLayout = () => {
               </div>
             </div>
 
-            {/* Dòng 4: Bio */}
             <div className="mb-1">
               <p className="mb-0 text-white">Vào chốt đơn đi nào :&gt;</p>
             </div>
 
-            {/* Dòng 5: Link Instagram */}
             <div className="mb-3">
               <a
                 href="#"
@@ -81,11 +79,7 @@ const UserLayout = () => {
             </div>
           </div>
         </div>
-
-        {/* --- PHẦN TABS --- */}
         <UserProfileTab />
-
-        {/* --- NỘI DUNG CON (OUTLET) --- */}
         <div className="row mt-3">
           <Outlet />
         </div>
