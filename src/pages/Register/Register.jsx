@@ -18,7 +18,7 @@ export default function Register() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value, // ✅ ĐÚNG
+      [e.target.name]: e.target.value,
     });
   };
 

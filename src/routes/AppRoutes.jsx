@@ -14,6 +14,7 @@ import RecipeDetailPage from "../pages/Recipes/RecipeDetailPage";
 import AdminLayout from "../layouts/Admin/AdminLayout";
 import UserLayout from "../layouts/Users/UserLayout";
 
+
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import AdminUsers from "../pages/Admin/AdminUsers";
 
@@ -21,6 +22,7 @@ import AdminUsers from "../pages/Admin/AdminUsers";
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
 import { PATH } from "../constants/paths";
+import DanhSachTheoDoi from "../pages/User/DanhSachTheoDoi/DanhSachTheoDoi";
 import QuanLiDanhMuc from "../pages/Admin/QuanLiDanhMuc";
 import QuanLieuNguyenLieu from "../pages/Admin/QuanLyNguyenLieu";
 
@@ -59,8 +61,7 @@ const AppRoutes = () => {
         <Route path="/user" element={<UserLayout />}>
           <Route index element={<div>Profile</div>} />
           <Route path="profile" element={<div>Profile</div>} />
-          <Route path="reposts" element={<div>Reposts</div>} />
-          <Route path="favorites" element={<div>Favorites</div>} />
+          <Route path="following" element={<DanhSachTheoDoi />} />
         </Route>
       </Route>
     </Routes>
