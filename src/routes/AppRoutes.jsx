@@ -15,7 +15,6 @@ import AdminLayout from "../layouts/Admin/AdminLayout";
 import UserLayout from "../layouts/Users/UserLayout";
 
 import AdminDashboard from "../pages/Admin/AdminDashboard";
-import AdminUsers from "../pages/Admin/AdminUsers";
 
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
@@ -27,6 +26,10 @@ import KeHoachBuaAn from "../pages//User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
 import CongThucList from "../pages/User/CongThuc/CongThucList";
 import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
 import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
+import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
+import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
+import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
+import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
 
 const AppRoutes = () => {
   return (
@@ -52,7 +55,12 @@ const AppRoutes = () => {
       <Route element={<RoleRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<AdminUsers />} />
+          {/* USERS */}
+          <Route path="users" element={< AdminUsers/>} />
+          <Route path="users/create" element={<AdminCreateUser />} />
+          <Route path="users/edit/:id" element={<AdminEditUser />} />
+
+
           <Route path="quanlidanhmuc" element={<QuanLiDanhMuc />} />
           <Route path="quanlinguyenlieu" element={<QuanLieuNguyenLieu />} />
         </Route>
@@ -70,6 +78,8 @@ const AppRoutes = () => {
             <Route path="them" element={<CreateCongThuc />} />
             <Route path="sua/:id" element={<CongThucEdit />} />
           </Route>
+          <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
+          {/* // <Route path="/quan-ly/danh-gia" element={< />} /> */}
         </Route>
       </Route>
     </Routes>
