@@ -1,0 +1,68 @@
+/* ====== WRAPPER ====== */
+.admin-edit-user {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px 28px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ====== TITLE ====== */
+.admin-edit-user h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ====== INPUT ====== */
+.admin-edit-user input,
+.admin-edit-user select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.admin-edit-user input:focus,
+.admin-edit-user select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* ====== ACTIONS ====== */
+.admin-edit-user .actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.admin-edit-user .btn-edit {
+  background: #2563eb;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-edit-user .btn-edit:hover {
+  background: #1d4ed8;
+}
+
+.admin-edit-user .btn-delete {
+  background: #dc2626;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-edit-user .btn-delete:hover {
+  background: #b91c1c;
+}

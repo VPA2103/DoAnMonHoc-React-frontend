@@ -43,3 +43,22 @@
   padding: 10px 24px;
   cursor: pointer;
 }
+.msg-success {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.msg-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+}
