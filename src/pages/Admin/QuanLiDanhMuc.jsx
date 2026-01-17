@@ -15,17 +15,17 @@ function QuanLiDanhMuc() {
 
   // ================= LOAD DATA =================
   const loadData = async () => {
-    try {
-      setLoading(true);
-      const res = await getDanhMucs();
-      setDanhMucs(res.data);
-    } catch (err) {
-      console.error("Lỗi load danh mục:", err);
-      alert("Không tải được danh mục");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    const data = await getDanhMucs(); // ✅ data là mảng
+    setDanhMucs(data);                // ✅ set trực tiếp
+  } catch (err) {
+    console.error("Lỗi load danh mục:", err);
+    alert("Không tải được danh mục");
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     loadData();
