@@ -18,7 +18,7 @@ function QuanLiDanhMuc() {
     try {
       setLoading(true);
       const res = await getDanhMucs();
-      xbr-kbiq-xvf
+      setDanhMucs(res.data);
     } catch (err) {
       console.error("Lỗi load danh mục:", err);
       alert("Không tải được danh mục");
