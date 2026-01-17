@@ -1,0 +1,63 @@
+.qlbl-page {
+  background: #000;
+  min-height: 100vh;
+  padding: 40px 16px;
+  color: #e4e6eb;
+}
+
+.qlbl-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+
+.qlbl-empty {
+  text-align: center;
+  color: #b0b3b8;
+}
+
+.fb-comment-list {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.fb-comment {
+  margin-bottom: 18px;
+}
+
+.fb-bubble {
+  background: #2a2a2a;
+  border-radius: 18px;
+  padding: 12px 16px;
+}
+
+.fb-recipe {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.fb-content {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.fb-meta {
+  font-size: 13px;
+  color: #b0b3b8;
+  margin-top: 6px;
+  margin-left: 8px;
+}
+
+.fb-meta button {
+  background: none;
+  border: none;
+  color: #1877f2;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.fb-meta button:hover {
+  text-decoration: underline;
+}

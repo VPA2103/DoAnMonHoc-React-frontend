@@ -1,12 +1,30 @@
+
+import { useState, useRef, useEffect } from "react";
 import { BsGear, BsShare } from "react-icons/bs";
 import { FaInstagram } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const UserHeader = ({ user }) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
+
   const secondaryBtnStyle = {
     backgroundColor: "#2F2F2F",
     color: "white",
     border: "none",
   };
+
+  // Click ra ngoài thì đóng menu
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start mb-4">
@@ -40,9 +58,58 @@ const UserHeader = ({ user }) => {
             Edit profile
           </button>
 
-          <button className="btn py-1 px-2" style={secondaryBtnStyle}>
-            <BsGear size={20} />
-          </button>
+          {/* Nút cài đặt */}
+          <div className="position-relative">
+            <button
+              className="btn py-1 px-2"
+              style={secondaryBtnStyle}
+              onClick={() => setShowMenu(!showMenu)}
+            >
+              <BsGear size={20} />
+            </button>
+
+            {showMenu && (
+              <div
+                ref={menuRef}
+                className="position-absolute end-0 mt-2 rounded shadow"
+                style={{
+                  width: 220,
+                  backgroundColor: "#1f1f1f",
+                  zIndex: 1000,
+                }}
+              >
+                <Link
+                  to="/user/quan-ly/binh-luan"
+                  className="d-block px-3 py-2 text-white text-decoration-none"
+                  onClick={() => setShowMenu(false)}
+                  style={{ cursor: "pointer" }}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#2F2F2F")
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
+                >
+                  🗨️ Quản lý bình luận
+                </Link>
+
+                {/* <Link
+                  to="/quan-ly/danh-gia"
+                  className="d-block px-3 py-2 text-white text-decoration-none"
+                  onClick={() => setShowMenu(false)}
+                  style={{ cursor: "pointer" }}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#2F2F2F")
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
+                >
+                  ⭐ Quản lý đánh giá
+                </Link> */}
+              </div>
+            )}
+          </div>
 
           <button className="btn py-1 px-2" style={secondaryBtnStyle}>
             <BsShare size={20} />
@@ -75,3 +142,4 @@ const UserHeader = ({ user }) => {
 };
 
 export default UserHeader;
+
