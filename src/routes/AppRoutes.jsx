@@ -27,6 +27,7 @@ import QuanLieuNguyenLieu from "../pages/Admin/QuanLyNguyenLieu";
 import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
 import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
 import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
+import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
 
 const AppRoutes = () => {
   return (
@@ -69,6 +70,8 @@ const AppRoutes = () => {
           <Route index element={<div>Profile</div>} />
           <Route path="profile" element={<div>Profile</div>} />
           <Route path="following" element={<DanhSachTheoDoi />} />
+          <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
+          {/* // <Route path="/quan-ly/danh-gia" element={< />} /> */}
         </Route>
       </Route>
     </Routes>
