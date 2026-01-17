@@ -49,6 +49,22 @@ export default function UserProfileTab() {
           Theo Dõi
         </NavLink>
       </li>
+      <li className="nav-item">
+        <NavLink
+          to="/user/quanlicongthuc"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
+        >
+          Quản lí công thức
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink
+          to="/user/kehoachbuaan"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
+        >
+          Kế hoạch bữa ăn
+        </NavLink>
+      </li>
     </ul>
   );
 }

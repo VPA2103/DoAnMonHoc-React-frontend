@@ -14,10 +14,8 @@ import RecipeDetailPage from "../pages/Recipes/RecipeDetailPage";
 import AdminLayout from "../layouts/Admin/AdminLayout";
 import UserLayout from "../layouts/Users/UserLayout";
 
-
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import AdminUsers from "../pages/Admin/AdminUsers";
-
 
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
@@ -25,6 +23,10 @@ import { PATH } from "../constants/paths";
 import DanhSachTheoDoi from "../pages/User/DanhSachTheoDoi/DanhSachTheoDoi";
 import QuanLiDanhMuc from "../pages/Admin/QuanLiDanhMuc";
 import QuanLieuNguyenLieu from "../pages/Admin/QuanLyNguyenLieu";
+import KeHoachBuaAn from "../pages//User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
+import CongThucList from "../pages/User/CongThuc/CongThucList";
+import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
+import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
 
 const AppRoutes = () => {
   return (
@@ -62,6 +64,12 @@ const AppRoutes = () => {
           <Route index element={<div>Profile</div>} />
           <Route path="profile" element={<div>Profile</div>} />
           <Route path="following" element={<DanhSachTheoDoi />} />
+          <Route path="kehoachbuaan" element={<KeHoachBuaAn />} />
+          <Route path="quanlicongthuc">
+            <Route index element={<CongThucList />} />
+            <Route path="them" element={<CreateCongThuc />} />
+            <Route path="sua/:id" element={<CongThucEdit />} />
+          </Route>
         </Route>
       </Route>
     </Routes>

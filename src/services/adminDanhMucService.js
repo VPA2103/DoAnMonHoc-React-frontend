@@ -1,13 +1,21 @@
 import axiosAdmin from "./axiosAdmin";
 
-export const getDanhMucs = () =>
-  axiosAdmin.get("/admin/danh-muc");
+export const getDanhMucs = async () => {
+  const res = await axiosAdmin.get("/admin/danh-muc");
+  return res.data.data; // ✅ chỉ trả mảng
+};
 
-export const addDanhMuc = (data) =>
-  axiosAdmin.post("/admin/danh-muc", data);
+export const addDanhMuc = async (data) => {
+  const res = await axiosAdmin.post("/admin/danh-muc", data);
+  return res.data;
+};
 
-export const updateDanhMuc = (id, data) =>
-  axiosAdmin.put(`/admin/danh-muc/${id}`, data);
+export const updateDanhMuc = async (id, data) => {
+  const res = await axiosAdmin.put(`/admin/danh-muc/${id}`, data);
+  return res.data;
+};
 
-export const deleteDanhMuc = (id) =>
-  axiosAdmin.delete(`/admin/danh-muc/${id}`);
+export const deleteDanhMuc = async (id) => {
+  const res = await axiosAdmin.delete(`/admin/danh-muc/${id}`);
+  return res.data;
+};
