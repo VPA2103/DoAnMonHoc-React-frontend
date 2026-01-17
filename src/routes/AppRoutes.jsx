@@ -24,7 +24,7 @@ import RoleRoute from "./RoleRoute";
 import { PATH } from "../constants/paths";
 import DanhSachTheoDoi from "../pages/User/DanhSachTheoDoi/DanhSachTheoDoi";
 import QuanLiDanhMuc from "../pages/Admin/QuanLiDanhMuc";
-import QuanLieuNguyenLieu from "../pages/Admin/QuanLyNguyenLieu";
+import QuanLyNguyenLieu from "../pages/Admin/QuanLyNguyenLieu/QuanLyNguyenLieu";
 
 const AppRoutes = () => {
   return (
@@ -52,7 +52,7 @@ const AppRoutes = () => {
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="quanlidanhmuc" element={<QuanLiDanhMuc />} />
-          <Route path="quanlinguyenlieu" element={<QuanLieuNguyenLieu />} />
+          <Route path="quanlinguyenlieu" element={<QuanLyNguyenLieu />} />
         </Route>
       </Route>
 
