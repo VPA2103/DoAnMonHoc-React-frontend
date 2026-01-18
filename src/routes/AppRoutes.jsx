@@ -19,17 +19,8 @@ import MealPlanPage from "../pages/MealPlans/MealPlanDetail";
 import Recipes from "../pages/Recipes/Recipes";
 import RecipeDetailPage from "../pages/Recipes/RecipeDetailPage";
 
-import AdminLayout from "../layouts/Admin/AdminLayout";
-import UserLayout from "../layouts/Users/UserLayout";
-
-import AdminDashboard from "../pages/Admin/Dashboard/AdminDashboard";
-
-import PublicRoute from "./PublicRoute";
-import RoleRoute from "./RoleRoute";
-import { PATH } from "../constants/paths";
-import DanhSachTheoDoi from "../pages/User/DanhSachTheoDoi/DanhSachTheoDoi";
 /* ===== ADMIN ===== */
-import AdminDashboard from "../pages/Admin/AdminDashboard";
+import AdminDashboard from "../pages/Admin/Dashboard/AdminDashboard";
 import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
 import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
 import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
@@ -45,11 +36,12 @@ import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
 import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
 import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
 import QuanLyCongThuc from "../pages/Admin/QuanLyCongThuc/quanlicongthuc";
-import AdminProfile from "../pages/Admin/Profile/AdminProfile";
 import SuaKeHoachBuaAn from "../pages/User/KeHoachBuaAn/SuaKeHoachBuaAn";
 import ThemMoiKeHoachBuaAn from "../pages/User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
 import KeHoachBuaAnViewPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnViewPage";
 import KeHoachBuaAnDetailPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnDetailPage";
+import AdminProfileContainer from "../pages/Admin/Profile/AdminProfileContainer";
+import Categories from "../pages/Admin/Categories/Categories";
 
 const AppRoutes = () => {
   return (
@@ -78,17 +70,23 @@ const AppRoutes = () => {
       <Route element={<RoleRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="profile" element={<AdminProfile/>} />
+          <Route path="profile" element={<AdminProfileContainer/>} />
           
-          {/* USERS */}
-          <Route path="users" element={< AdminUsers/>} />
+          <Route path="users" element={<AdminUsers />} />
           <Route path="users/create" element={<AdminCreateUser />} />
           <Route path="users/edit/:id" element={<AdminEditUser />} />
           <Route path="quanlilienhe" element={<QuanLyLienHe />} />
           <Route path="quanlidanhmuc" element={<QuanLiDanhMuc />} />
-          <Route path="quanlinguyenlieu" element={<QuanLieuNguyenLieu />} />
+          <Route path="quanlinguyenlieu" element={<QuanLyNguyenLieu />} />
 
           <Route path="quanlicongthuc" element={<QuanLyCongThuc />} />
+          <Route path="recipes" element={<Recipes />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="kehoachbuaan" element={<Categories />} />
+          <Route path="categories" element={<Categories />} />
+
+
+
 
         </Route>
       </Route>

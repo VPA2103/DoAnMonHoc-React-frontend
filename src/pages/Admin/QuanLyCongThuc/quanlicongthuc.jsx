@@ -52,7 +52,7 @@ export default function QuanLyCongThuc() {
         )
       );
     } catch (err) {
-      alert("Xác nhận thất bại");
+      alert("Xác nhận thất bại: ",err);
     }
   };
 
