@@ -30,6 +30,7 @@ import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
 import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
 import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
 import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
+import QuanLyLienHe from "../pages/Admin/QuanLyLienHe/QuanLyLienHe";
 
 const AppRoutes = () => {
   return (
@@ -60,7 +61,7 @@ const AppRoutes = () => {
           <Route path="users/create" element={<AdminCreateUser />} />
           <Route path="users/edit/:id" element={<AdminEditUser />} />
 
-
+          <Route path="quanlilienhe" element={<QuanLyLienHe />} />
           <Route path="quanlidanhmuc" element={<QuanLiDanhMuc />} />
           <Route path="quanlinguyenlieu" element={<QuanLieuNguyenLieu />} />
         </Route>

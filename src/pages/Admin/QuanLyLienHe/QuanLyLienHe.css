@@ -1,0 +1,77 @@
+.quan-ly-lien-he {
+padding: 20px;
+background-color: #f9fafb;
+min-height: 100vh;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+.quan-ly-lien-he h2 {
+font-size: 24px;
+font-weight: bold;
+margin-bottom: 16px;
+color: #1f2937;
+}
+
+.error {
+color: #dc2626;
+margin-bottom: 12px;
+font-weight: 500;
+}
+
+.loading {
+padding: 20px;
+font-size: 16px;
+color: #374151;
+}
+
+.quan-ly-lien-he table {
+width: 100%;
+border-collapse: collapse;
+background-color: #ffffff;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.quan-ly-lien-he th,
+.quan-ly-lien-he td {
+padding: 10px 12px;
+border: 1px solid #e5e7eb;
+text-align: left;
+vertical-align: middle;
+}
+
+.quan-ly-lien-he th {
+background-color: #f3f4f6;
+color: #374151;
+font-weight: 600;
+}
+
+.quan-ly-lien-he tbody tr {
+background-color: #f9fafb;
+}
+
+.noi-dung {
+max-width: 300px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.btn-delete {
+background-color: #ef4444;
+color: #ffffff;
+border: none;
+padding: 6px 12px;
+border-radius: 4px;
+cursor: pointer;
+font-size: 14px;
+}
+
+.btn-delete {
+background-color: #dc2626;
+}
+
+.empty {
+text-align: center;
+padding: 20px;
+color: #6b7280;
+}
