@@ -19,11 +19,6 @@ import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
 import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
 
 // USER
-import KeHoachBuaAn from "../pages/User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
-import CongThucList from "../pages/User/CongThuc/CongThucList";
-import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
-import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
-import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
 
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 
@@ -32,6 +27,17 @@ import RoleRoute from "./RoleRoute";
 import { PATH } from "../constants/paths";
 import DanhSachTheoDoi from "../pages/User/DanhSachTheoDoi/DanhSachTheoDoi";
 import QuanLiDanhMuc from "../pages/Admin/QuanLiDanhMuc";
+import KeHoachBuaAn from "../pages/User/KeHoachBuaAn/KeHoachBuaAn";
+import CongThucList from "../pages/User/CongThuc/CongThucList";
+import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
+import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
+
+
+import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
+import SuaKeHoachBuaAn from "../pages/User/KeHoachBuaAn/SuaKeHoachBuaAn";
+import ThemMoiKeHoachBuaAn from "../pages//User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
+import KeHoachBuaAnViewPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnViewPage";
+import KeHoachBuaAnDetailPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnDetailPage";
 import QuanLyNguyenLieu from "../pages/Admin/QuanLyNguyenLieu/QuanLyNguyenLieu";
 
 const AppRoutes = () => {
@@ -52,6 +58,8 @@ const AppRoutes = () => {
         <Route path={PATH.RECIPES} element={<Recipes />} />
         <Route path={PATH.RECIPE_DETAIL} element={<RecipeDetailPage />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/KeHoachBuaAn" element={<KeHoachBuaAnViewPage />} />
+        <Route path="kehoachbuaan/:id" element={<KeHoachBuaAnDetailPage />} />
       </Route>
 
       {/* 🛠 ADMIN */}
@@ -75,11 +83,15 @@ const AppRoutes = () => {
           <Route index element={<div>Profile</div>} />
           <Route path="profile" element={<div>Profile</div>} />
           <Route path="following" element={<DanhSachTheoDoi />} />
-          <Route path="kehoachbuaan" element={<KeHoachBuaAn />} />
           <Route path="quanlicongthuc">
             <Route index element={<CongThucList />} />
             <Route path="them" element={<CreateCongThuc />} />
             <Route path="sua/:id" element={<CongThucEdit />} />
+          </Route>
+          <Route path="kehoachbuaan">
+            <Route index element={<KeHoachBuaAn />} />
+            <Route path="them" element={<ThemMoiKeHoachBuaAn />} />
+            <Route path="sua/:id" element={<SuaKeHoachBuaAn />} />
           </Route>
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
           {/* // <Route path="/quan-ly/danh-gia" element={< />} /> */}
