@@ -20,7 +20,7 @@ import Recipes from "../pages/Recipes/Recipes";
 import RecipeDetailPage from "../pages/Recipes/RecipeDetailPage";
 
 /* ===== ADMIN ===== */
-import AdminDashboard from "../pages/Admin/AdminDashboard";
+import AdminDashboard from "../pages/Admin/Dashboard/AdminDashboard";
 import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
 import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
 import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
@@ -35,10 +35,13 @@ import CongThucList from "../pages/User/CongThuc/CongThucList";
 import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
 import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
 import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
+import QuanLyCongThuc from "../pages/Admin/QuanLyCongThuc/quanlicongthuc";
 import SuaKeHoachBuaAn from "../pages/User/KeHoachBuaAn/SuaKeHoachBuaAn";
 import ThemMoiKeHoachBuaAn from "../pages/User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
 import KeHoachBuaAnViewPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnViewPage";
 import KeHoachBuaAnDetailPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnDetailPage";
+import AdminProfileContainer from "../pages/Admin/Profile/AdminProfileContainer";
+import Categories from "../pages/Admin/Categories/Categories";
 
 const AppRoutes = () => {
   return (
@@ -67,12 +70,24 @@ const AppRoutes = () => {
       <Route element={<RoleRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="profile" element={<AdminProfileContainer/>} />
+          
           <Route path="users" element={<AdminUsers />} />
           <Route path="users/create" element={<AdminCreateUser />} />
           <Route path="users/edit/:id" element={<AdminEditUser />} />
           <Route path="quanlilienhe" element={<QuanLyLienHe />} />
           <Route path="quanlidanhmuc" element={<QuanLiDanhMuc />} />
           <Route path="quanlinguyenlieu" element={<QuanLyNguyenLieu />} />
+
+          <Route path="quanlicongthuc" element={<QuanLyCongThuc />} />
+          <Route path="recipes" element={<Recipes />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="kehoachbuaan" element={<Categories />} />
+          <Route path="categories" element={<Categories />} />
+
+
+
+
         </Route>
       </Route>
 

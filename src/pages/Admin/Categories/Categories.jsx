@@ -1,11 +1,10 @@
 
-
-export default function AdminDashboard(){
+export default function Categories(){
 
     return(
         <>
             <div>
-                Admin Dashboard
+                Categories
             </div>
         </>
     )
