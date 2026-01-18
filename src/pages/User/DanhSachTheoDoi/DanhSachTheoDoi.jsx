@@ -26,7 +26,7 @@ const followers = [
 
 export default function DanhSachTheoDoi() {
   return (
-    <div className="container mt-3" style={{ maxWidth: 500 }}>
+    <div className="container mt-3">
       {/* Header */}
       <div className="d-flex align-items-center mb-3">
         <button className="btn btn-link p-0 me-2">←</button>

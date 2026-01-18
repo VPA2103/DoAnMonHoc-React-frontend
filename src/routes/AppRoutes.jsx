@@ -30,6 +30,7 @@ import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
 import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
 import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
 import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
+import YeuThich from "../pages/User/YeuThich/YeuThich";
 
 const AppRoutes = () => {
   return (
@@ -79,6 +80,7 @@ const AppRoutes = () => {
             <Route path="sua/:id" element={<CongThucEdit />} />
           </Route>
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
+          <Route path="yeu-thich" element={<YeuThich />} />
           {/* // <Route path="/quan-ly/danh-gia" element={< />} /> */}
         </Route>
       </Route>

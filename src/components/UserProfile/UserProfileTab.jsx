@@ -35,7 +35,7 @@ export default function UserProfileTab() {
       </li>
       <li className="nav-item">
         <NavLink
-          to="/user/favorites"
+          to="/user/yeu-thich"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Favorites

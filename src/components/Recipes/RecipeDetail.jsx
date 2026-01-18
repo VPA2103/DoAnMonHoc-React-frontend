@@ -36,7 +36,7 @@ const RecipeDetail = ({ recipe }) => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <img src={recipe.image} alt={recipe.name} style={{ width: '100%', maxWidth: '600px', height: '400px', objectFit: 'cover', borderRadius: '8px', marginBottom: '20px' }} />
+      <img src={recipe.image} alt={recipe.name} style={{ width: '100%', height: '400px', objectFit: 'cover', borderRadius: '8px', marginBottom: '20px' }} />
       <h1>{recipe.name}</h1>
       <p><strong>Calo:</strong> {recipe.calories} kcal</p>
       <p><strong>Đánh giá:</strong> {'★'.repeat(Math.floor(currentRating))} ({currentRating.toFixed(1)})</p>
