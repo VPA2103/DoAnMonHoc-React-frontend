@@ -14,7 +14,7 @@ import RecipeDetailPage from "../pages/Recipes/RecipeDetailPage";
 import AdminLayout from "../layouts/Admin/AdminLayout";
 import UserLayout from "../layouts/Users/UserLayout";
 
-import AdminDashboard from "../pages/Admin/AdminDashboard";
+import AdminDashboard from "../pages/Admin/Dashboard/AdminDashboard";
 
 import PublicRoute from "./PublicRoute";
 import RoleRoute from "./RoleRoute";
@@ -30,6 +30,8 @@ import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
 import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
 import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
 import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
+import QuanLyCongThuc from "../pages/Admin/QuanLyCongThuc/quanlicongthuc";
+import AdminProfile from "../pages/Admin/Profile/AdminProfile";
 
 const AppRoutes = () => {
   return (
@@ -55,6 +57,8 @@ const AppRoutes = () => {
       <Route element={<RoleRoute allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="profile" element={<AdminProfile/>} />
+          
           {/* USERS */}
           <Route path="users" element={< AdminUsers/>} />
           <Route path="users/create" element={<AdminCreateUser />} />
@@ -63,6 +67,9 @@ const AppRoutes = () => {
 
           <Route path="quanlidanhmuc" element={<QuanLiDanhMuc />} />
           <Route path="quanlinguyenlieu" element={<QuanLieuNguyenLieu />} />
+
+          <Route path="quanlicongthuc" element={<QuanLyCongThuc />} />
+
         </Route>
       </Route>
 

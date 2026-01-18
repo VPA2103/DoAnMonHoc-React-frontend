@@ -1,4 +1,5 @@
 import Dropdown from "react-bootstrap/Dropdown";
+import { Link } from "react-router-dom";
 
 const AdminHeader = () => {
   return (
@@ -12,7 +13,9 @@ const AdminHeader = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu align="end">
-            <Dropdown.Item>Hồ sơ</Dropdown.Item>
+            <Dropdown.Item as= {Link} to={"/admin/profile"}>
+              Hồ sơ
+              </Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item className="text-danger">
               Đăng xuất

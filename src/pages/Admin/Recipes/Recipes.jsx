@@ -1,11 +1,9 @@
 
-
-export default function AdminDashboard(){
-
+export default function Recipes(){
     return(
         <>
             <div>
-                Admin Dashboard
+                Recipes
             </div>
         </>
     )
