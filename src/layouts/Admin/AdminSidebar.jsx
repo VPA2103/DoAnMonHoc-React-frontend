@@ -73,6 +73,27 @@ const AdminSidebar = () => {
             Quản lí nguyên liệu
           </NavLink>
         </li>
+
+        <li className="nav-item">
+          <NavLink
+            to="kehoachbuaan"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? "active bg-primary" : ""}`
+            }
+          >
+            Kế hoạch bữa ăn
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink
+            to="quanlicongthuc"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? "active bg-primary" : ""}`
+            }
+          >
+            Quản lí công thức
+          </NavLink>
+        </li>
         
       </ul>
     </div>
