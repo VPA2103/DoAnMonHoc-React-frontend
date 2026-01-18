@@ -94,6 +94,16 @@ const AdminSidebar = () => {
             Quản lí công thức
           </NavLink>
         </li>
+        <li className="nav-item">
+          <NavLink
+            to="quanlilienhe"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? "active bg-primary" : ""}`
+            }
+          >
+            Quản lí Lien he
+          </NavLink>
+        </li>
         
       </ul>
     </div>
