@@ -43,12 +43,16 @@ const QuanLyNguyenLieu = () => {
         params: { ma_cong_thuc: maCongThuc },
         headers: { Authorization: `Bearer ${token}` },
       });
-
       setNguyenLieuList(res.data.data || []);
     } catch {
       toast.error("Không tải được nguyên liệu");
     }
   };
+
+  /* ================= INIT ================= */
+  useEffect(() => {
+    loadCongThuc();
+  }, []);
 
   /* ================= ĐỔI CÔNG THỨC ================= */
   useEffect(() => {
@@ -66,7 +70,6 @@ const QuanLyNguyenLieu = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  /* ================= CHỌN CÔNG THỨC ================= */
   const handleSelectCongThuc = (e) => {
     setSelectedCongThuc(e.target.value);
   };
@@ -102,7 +105,6 @@ const QuanLyNguyenLieu = () => {
         so_luong: "",
       });
       setEditingId(null);
-
       loadNguyenLieu(selectedCongThuc);
     } catch {
       toast.error("Thao tác thất bại");
@@ -134,11 +136,6 @@ const QuanLyNguyenLieu = () => {
       toast.error("Xóa thất bại");
     }
   };
-
-  /* ================= INIT ================= */
-  useEffect(() => {
-    loadCongThuc();
-  }, []);
 
   return (
     <div className="container mt-4">
@@ -210,15 +207,13 @@ const QuanLyNguyenLieu = () => {
             <th>Nguyên liệu</th>
             <th>Số lượng</th>
             <th>Đơn vị</th>
-            <th>Tạo lúc</th>
-            <th>Cập nhật</th>
             <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
           {nguyenLieuList.length === 0 ? (
             <tr>
-              <td colSpan="7" className="text-center">
+              <td colSpan="5" className="text-center">
                 Chưa có nguyên liệu
               </td>
             </tr>
@@ -229,8 +224,6 @@ const QuanLyNguyenLieu = () => {
                 <td>{nl.ten_nguyen_lieu}</td>
                 <td>{nl.so_luong}</td>
                 <td>{nl.don_vi_tinh}</td>
-                <td>{new Date(nl.created_at).toLocaleString("vi-VN")}</td>
-                <td>{new Date(nl.updated_at).toLocaleString("vi-VN")}</td>
                 <td>
                   <button
                     className="btn btn-warning btn-sm me-2"
