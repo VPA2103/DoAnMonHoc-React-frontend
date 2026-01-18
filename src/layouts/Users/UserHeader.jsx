@@ -3,11 +3,13 @@ import { useState, useRef, useEffect } from "react";
 import { BsGear, BsShare } from "react-icons/bs";
 import { FaInstagram } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import SuaProfile from "../../pages/User/SuaProfile/SuaProfile";
 const UserHeader = ({ user }) => {
   const [showMenu, setShowMenu] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false); 
   const menuRef = useRef(null);
-
+// 1. Khai báo đường dẫn server (Quan trọng để hiển thị ảnh)
+  const SERVER_URL = "http://127.0.0.1:8000/storage/";
   const secondaryBtnStyle = {
     backgroundColor: "#2F2F2F",
     color: "white",
@@ -38,22 +40,31 @@ const UserHeader = ({ user }) => {
             border: "1px solid #2F2F2F",
           }}
         >
-          <img
-            src={user.anh_dai_dien}
+         <img
+            src={
+              user?.anh_dai_dien
+                ? (user.anh_dai_dien.startsWith('http') 
+                    ? user.anh_dai_dien 
+                    : `${SERVER_URL}${user.anh_dai_dien}`) // Nối link server vào
+                : "https://placehold.co/100" // Ảnh mặc định nếu user chưa có ảnh
+            }
             alt="Avatar"
             className="w-100 h-100 object-fit-cover"
+            // MỚI THÊM: Xử lý nếu ảnh bị lỗi tải thì tự đổi sang ảnh mẫu
+            onError={(e) => {e.target.src = "https://placehold.co/100"}} 
           />
         </div>
       </div>
 
       {/* Info */}
       <div className="flex-grow-1 w-100">
-        <h2 className="fw-bold mb-1">{user.ten_nguoi_dung}</h2>
+        <h2 className="fw-bold mb-1">{user?.ten_nguoi_dung}</h2>
 
         <div className="d-flex align-items-center gap-2 mb-3 mt-2">
           <button
             className="btn fw-semibold px-4 py-1 text-white"
             style={{ backgroundColor: "#FE2C55", border: "none" }}
+              onClick={() => setShowEditModal(true)}  
           >
             Edit profile
           </button>
@@ -137,6 +148,14 @@ const UserHeader = ({ user }) => {
           <FaInstagram /> Instagram: vpa_healthy.beauty
         </a>
       </div>
+
+      
+
+      <SuaProfile 
+        show={showEditModal} 
+        handleClose={() => setShowEditModal(false)} 
+        currentUser={user} 
+      />
     </div>
   );
 };

@@ -1,0 +1,38 @@
+/* Hiệu ứng chuyển tab mượt mà */
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tùy chỉnh input khi focus để hợp màu với Bếp Việt */
+.form-control:focus {
+    background-color: #2b3035; /* Màu xám đậm hơn */
+    color: white;
+    border-color: #fe2c55; /* Màu hồng giống TikTok / Bếp Việt */
+    box-shadow: 0 0 0 0.25rem rgba(254, 44, 85, 0.25);
+}
+
+/* Nút Primary màu hồng cam đặc trưng */
+.btn-primary {
+    background-color: #fe2c55 !important;
+    border-color: #fe2c55 !important;
+}
+
+.btn-primary:hover {
+    background-color: #e0244a !important;
+}
+
+/* Tab Active ở Sidebar */
+.nav-pills .nav-link.active {
+    background-color: #fe2c55 !important;
+}
+
+/* CSS cho thanh cuộn nếu nội dung quá dài */
+.modal-body {
+    max-height: 80vh;
+    overflow-y: auto;
+}
