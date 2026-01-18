@@ -2,14 +2,13 @@ import axiosUser from "./axiosUser";
 
 // ✅ LẤY TẤT CẢ
 export const getAllKeHoach = async () => {
-  const res = await axiosUser.get("/user/ke-hoach");
-  return res.data.data; // 👈 QUAN TRỌNG
+  const res = await axiosUser.get("/ke-hoach");
+  return res.data.data;
 };
 
-// ✅ LẤY 1 KẾ HOẠCH
 export const getKeHoachById = async (id) => {
-  const res = await axiosUser.get(`/user/ke-hoach/${id}`);
-  return res.data.data; // 👈 QUAN TRỌNG
+  const res = await axiosUser.get(`/ke-hoach/${id}`);
+  return res.data.data;
 };
 
 

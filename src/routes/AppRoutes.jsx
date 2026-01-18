@@ -13,6 +13,12 @@ import RecipeDetailPage from "../pages/Recipes/RecipeDetailPage";
 
 import AdminLayout from "../layouts/Admin/AdminLayout";
 import UserLayout from "../layouts/Users/UserLayout";
+// ADMIN - USERS
+import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
+import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
+import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
+
+// USER
 
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 
@@ -21,19 +27,18 @@ import RoleRoute from "./RoleRoute";
 import { PATH } from "../constants/paths";
 import DanhSachTheoDoi from "../pages/User/DanhSachTheoDoi/DanhSachTheoDoi";
 import QuanLiDanhMuc from "../pages/Admin/QuanLiDanhMuc";
-import QuanLieuNguyenLieu from "../pages/Admin/QuanLyNguyenLieu";
 import KeHoachBuaAn from "../pages/User/KeHoachBuaAn/KeHoachBuaAn";
 import CongThucList from "../pages/User/CongThuc/CongThucList";
 import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
 import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
-import AdminCreateUser from "../pages/Admin/AdminUser/AdminCreateUser";
-import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
-import AdminUsers from "../pages/Admin/AdminUser/AdminUsers";
+
+
 import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
 import SuaKeHoachBuaAn from "../pages/User/KeHoachBuaAn/SuaKeHoachBuaAn";
 import ThemMoiKeHoachBuaAn from "../pages//User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
 import KeHoachBuaAnViewPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnViewPage";
 import KeHoachBuaAnDetailPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnDetailPage";
+import QuanLyNguyenLieu from "../pages/Admin/QuanLyNguyenLieu/QuanLyNguyenLieu";
 
 const AppRoutes = () => {
   return (
@@ -65,10 +70,10 @@ const AppRoutes = () => {
           <Route path="users" element={< AdminUsers/>} />
           <Route path="users/create" element={<AdminCreateUser />} />
           <Route path="users/edit/:id" element={<AdminEditUser />} />
-
+          
 
           <Route path="quanlidanhmuc" element={<QuanLiDanhMuc />} />
-          <Route path="quanlinguyenlieu" element={<QuanLieuNguyenLieu />} />
+          <Route path="quanlinguyenlieu" element={<QuanLyNguyenLieu />} />
         </Route>
       </Route>
 
