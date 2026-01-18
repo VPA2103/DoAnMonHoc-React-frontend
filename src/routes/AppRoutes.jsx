@@ -29,16 +29,14 @@ import QuanLyNguyenLieu from "../pages/Admin/QuanLyNguyenLieu/QuanLyNguyenLieu";
 import QuanLyLienHe from "../pages/Admin/QuanLyLienHe/QuanLyLienHe";
 
 /* ===== USER ===== */
-import CongThucList from "../pages/User/CongThuc/CongThucList";
-import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
-import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
-import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
 import DanhSachTheoDoi from "../pages/User/DanhSachTheoDoi/DanhSachTheoDoi";
-
 import KeHoachBuaAn from "../pages/User/KeHoachBuaAn/KeHoachBuaAn";
-import ThemMoiKeHoachBuaAn from "../pages/User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
+import CongThucList from "../pages/User/CongThuc/CongThucList";
+import CongThucEdit from "../pages/User/CongThuc/CongThucEdit";
+import CreateCongThuc from "../pages/User/CongThuc/CreateCongThuc";
+import QuanLyBinhLuan from "../pages/User/QuanLyBinhLuan/QuanLyBinhLuan";
 import SuaKeHoachBuaAn from "../pages/User/KeHoachBuaAn/SuaKeHoachBuaAn";
-
+import ThemMoiKeHoachBuaAn from "../pages/User/KeHoachBuaAn/ThemMoikeHoachbuaAn";
 import KeHoachBuaAnViewPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnViewPage";
 import KeHoachBuaAnDetailPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnDetailPage";
 
