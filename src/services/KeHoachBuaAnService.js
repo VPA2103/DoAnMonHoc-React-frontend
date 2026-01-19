@@ -2,11 +2,22 @@ import axiosUser from "./axiosUser";
 
 // ✅ LẤY TẤT CẢ
 export const getAllKeHoach = async () => {
+  const res = await axiosUser.get("/user/ke-hoach");
+  return res.data.data;
+};
+
+export const HienDanhSachLenTrangChu = async () => {
   const res = await axiosUser.get("/ke-hoach");
   return res.data.data;
 };
 
+// LẤY THEO ID
 export const getKeHoachById = async (id) => {
+  const res = await axiosUser.get(`/user/ke-hoach/${id}`);
+  return res.data.data;
+};
+
+export const LayKeHoachTrangChuId = async (id) => {
   const res = await axiosUser.get(`/ke-hoach/${id}`);
   return res.data.data;
 };
