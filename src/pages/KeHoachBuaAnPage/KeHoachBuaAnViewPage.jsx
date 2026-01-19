@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllKeHoach } from "../../services/KeHoachBuaAnService";
+import { HienDanhSachLenTrangChu } from "../../services/KeHoachBuaAnService";
 import { useNavigate } from "react-router-dom";
 
 const PAGE_SIZE = 8;
@@ -13,7 +13,7 @@ const KeHoachBuaAnListPage = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await getAllKeHoach();
+        const data = await HienDanhSachLenTrangChu();
         setKeHoachs(data);
       } catch (err) {
         console.error(err);

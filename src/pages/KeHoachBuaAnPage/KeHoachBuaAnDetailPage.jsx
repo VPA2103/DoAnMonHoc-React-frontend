@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getAllKeHoach } from "../../services/KeHoachBuaAnService";
+import { HienDanhSachLenTrangChu } from "../../services/KeHoachBuaAnService";
 
 const KeHoachBuaAnDetailPage = () => {
     const { id } = useParams();
@@ -17,7 +17,7 @@ const KeHoachBuaAnDetailPage = () => {
     useEffect(() => {
         const loadDetail = async () => {
             try {
-                const data = await getAllKeHoach();
+                const data = await HienDanhSachLenTrangChu();
                 const found = data.find(
                     (k) => k.ma_ke_hoach === Number(id)
                 );
