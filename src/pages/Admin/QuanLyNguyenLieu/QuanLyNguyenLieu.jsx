@@ -22,7 +22,7 @@ const QuanLyNguyenLieu = () => {
   /* ================= LOAD CÔNG THỨC ================= */
   const loadCongThuc = async () => {
     try {
-      const res = await axios.get(`${API_URL}/cong-thuc`, {
+      const res = await axios.get(`${API_URL}/admin/cong-thuc`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCongThucList(res.data.data || []);
