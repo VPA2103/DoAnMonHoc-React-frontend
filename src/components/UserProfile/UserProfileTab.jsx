@@ -5,13 +5,11 @@ export default function UserProfileTab() {
   // Style khi Tab được chọn (Active)
   // border-bottom: 2px solid white, chữ trắng
   const activeStyle =
-    "nav-link bg-transparent text-white border-0 border-bottom border-2 border-white fw-semibold px-4 rounded-0";
-
+"nav-link bg-transparent text-white border-0 border-bottom border-2 border-white fw-semibold px-2 rounded-0";
   // Style khi Tab không được chọn (Inactive)
   // chữ xám mờ (text-white-50), không viền
   const normalStyle =
-    "nav-link bg-transparent text-white-50 border-0 px-4 fw-semibold hover-text-white";
-
+"nav-link bg-transparent text-white-50 border-0 px-2 fw-semibold hover-text-white";
   return (
     <ul
       className="nav nav-fill mb-3 border-bottom"
@@ -63,6 +61,14 @@ export default function UserProfileTab() {
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Kế hoạch bữa ăn
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink
+          to="/user/blog"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
+        >
+          Quản lý Blog
         </NavLink>
       </li>
     </ul>

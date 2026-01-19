@@ -42,7 +42,8 @@ import KeHoachBuaAnViewPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnViewPage
 import KeHoachBuaAnDetailPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnDetailPage";
 import AdminProfileContainer from "../pages/Admin/Profile/AdminProfileContainer";
 import Categories from "../pages/Admin/Categories/Categories";
-
+import DanhSachBlog from '../pages/User/QuanLyBlog/DanhSachBlog';
+import ThemSuaBlog from '../pages/User/QuanLyBlog/ThemSuaBlog';
 const AppRoutes = () => {
   return (
     <Routes>
@@ -110,6 +111,12 @@ const AppRoutes = () => {
             <Route path="sua/:id" element={<SuaKeHoachBuaAn />} />
           </Route>
 
+          <Route path="blog">
+             <Route index element={<DanhSachBlog />} />
+             <Route path="them" element={<ThemSuaBlog />} />
+             <Route path="sua/:id" element={<ThemSuaBlog />} />
+          </Route>
+          
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
         </Route>
       </Route>
