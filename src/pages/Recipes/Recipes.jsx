@@ -23,7 +23,7 @@ const Recipes = () => {
       console.error("Lỗi lấy danh sách công thức:", error);
     }
   };
-
+  //heloo
   return (
     <div style={{ padding: 20 }}>
       <h1>Danh sách công thức</h1>
