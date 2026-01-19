@@ -107,6 +107,11 @@ const Header = () => {
                 Kế hoạch bữa ăn
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link text-dark" to="/feed-blogs">
+                Bài đăng người theo dõi
+              </Link>
+            </li>
             
             <li className="nav-item">
               <Link className="nav-link text-dark" to="/user/blog">

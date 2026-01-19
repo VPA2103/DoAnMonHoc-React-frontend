@@ -4,16 +4,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const ThemSuaBlog = () => {
-    const { id } = useParams(); // Lấy ID từ URL nếu là sửa
+    const { id } = useParams(); // id này là ma_blog lấy từ URL
     const navigate = useNavigate();
     const isEditMode = !!id;
 
     const [formData, setFormData] = useState({
         tieu_de: '',
-        noi_dung: '',
-        hinh_anh: null
+        noi_dung: ''
     });
-    const [previewImg, setPreviewImg] = useState('');
 
     useEffect(() => {
         if (isEditMode) {
@@ -23,12 +21,13 @@ const ThemSuaBlog = () => {
 
     const loadBlogData = async () => {
         try {
+            // GET chi tiết blog là public → không cần token
             const res = await axios.get(`http://localhost:8000/api/blogs/${id}`);
-            const { tieu_de, noi_dung, hinh_anh } = res.data;
-            setFormData({ tieu_de, noi_dung, hinh_anh: null }); // Ảnh giữ null để biết có upload mới hay không
-            if (hinh_anh) setPreviewImg(`http://localhost:8000/${hinh_anh}`);
+            const { tieu_de, noi_dung } = res.data;
+            setFormData({ tieu_de, noi_dung });
         } catch (error) {
             console.error(error);
+            alert('Không tải được dữ liệu bài viết');
         }
     };
 
@@ -36,34 +35,46 @@ const ThemSuaBlog = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setFormData({ ...formData, hinh_anh: file });
-        setPreviewImg(URL.createObjectURL(file));
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = new FormData();
-        data.append('tieu_de', formData.tieu_de);
-        data.append('noi_dung', formData.noi_dung);
-        if (formData.hinh_anh) {
-            data.append('hinh_anh', formData.hinh_anh);
-        }
         
-        // Laravel PUT method với FormData hơi đặc biệt, nên dùng POST kèm _method
-        if (isEditMode) {
-            data.append('_method', 'PUT'); 
-            await axios.post(`http://localhost:8000/api/blogs/${id}`, data);
-        } else {
-            await axios.post('http://localhost:8000/api/blogs', data);
+        const data = {
+            tieu_de: formData.tieu_de,
+            noi_dung: formData.noi_dung
+        };
+
+        const token = localStorage.getItem('token'); 
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        try {
+            if (isEditMode) {
+                // THÊM config vào đây để gửi token
+                await axios.put(`http://localhost:8000/api/blogs/${id}`, data, config);
+            } else {
+                // THÊM config vào đây để gửi token
+                await axios.post('http://localhost:8000/api/blogs', data, config);
+            }
+            navigate('/user/blog'); 
+        } catch (error) {
+            alert("Lỗi lưu bài viết");
+            console.error(error);
+            
+            // Log chi tiết hơn để debug
+            if (error.response) {
+                console.log('Status:', error.response.status);
+                console.log('Message:', error.response.data.message || error.response.data);
+            }
         }
-        
-        navigate('/admin/blog'); // Quay về danh sách
     };
 
     return (
-        <Container className="mt-4">
+        <Container className="mt-4 text-white">
             <h2>{isEditMode ? 'Cập nhật bài viết' : 'Thêm bài viết mới'}</h2>
             <Form onSubmit={handleSubmit} className="mt-3">
                 <Form.Group className="mb-3">
@@ -74,15 +85,8 @@ const ThemSuaBlog = () => {
                         value={formData.tieu_de} 
                         onChange={handleInputChange} 
                         required 
+                        className="bg-dark text-white border-secondary"
                     />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                    <Form.Label>Ảnh đại diện</Form.Label>
-                    <Form.Control type="file" onChange={handleFileChange} />
-                    {previewImg && (
-                        <img src={previewImg} alt="Preview" className="mt-2" style={{height: '150px'}} />
-                    )}
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -94,8 +98,8 @@ const ThemSuaBlog = () => {
                         value={formData.noi_dung} 
                         onChange={handleInputChange}
                         required
+                        className="bg-dark text-white border-secondary"
                     />
-                    {/* Gợi ý: Sau này có thể thay textarea bằng React-Quill để soạn thảo đẹp hơn */}
                 </Form.Group>
 
                 <Button variant="primary" type="submit">
