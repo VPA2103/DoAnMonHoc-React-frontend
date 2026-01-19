@@ -1,65 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
+import { getFollowingUsers } from "../../../services/userService";
+import { useOutletContext } from "react-router-dom";
 
-const followers = [
-  {
-    name: "Afra Harris",
-    username: "annabelle___boyle_",
-    avatar: "https://via.placeholder.com/50",
-  },
-  {
-    name: "than好huyeng",
-    username: "_thanhhuyenn20",
-    avatar: "https://via.placeholder.com/50",
-  },
-  {
-    name: "Trần Văn Thuận",
-    username: "vthuan.can",
-    avatar: "https://via.placeholder.com/50",
-  },
-  {
-    name: "An",
-    username: "an27032003",
-    avatar: "https://via.placeholder.com/50",
-  },
-];
 
 export default function DanhSachTheoDoi() {
+
+const [following, setFollowing] = useState([]);
+  const [loading, setLoading] = useState(true);
+   const { setUser } = useOutletContext();
+
+  useEffect(() => {
+    const fetchFollowing = async () => {
+      try {
+        const res = await getFollowingUsers();
+        setFollowing(res.data); // hoặc res.data.data tùy API
+      } catch (error) {
+        console.error("Lỗi lấy danh sách đang theo dõi:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFollowing();
+  }, []);
+const handleUnfollow = async (userId) => {
+    await axios.delete(`http://127.0.0.1:8000/api/unfollow/${userId}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+
+    setFollowing(prev =>
+      prev.filter(u => u.ma_nguoi_dung !== userId)
+    );
+
+    // 🔥 cập nhật header ngay
+    setUser(prev => ({
+      ...prev,
+      following: prev.following - 1
+    }));
+  };
+
+
+
+  if (loading) return <p>Đang tải...</p>;
+
   return (
-    <div className="container mt-3" style={{ maxWidth: 500 }}>
-      {/* Header */}
-      <div className="d-flex align-items-center mb-3">
-        <button className="btn btn-link p-0 me-2">←</button>
-        <h5 className="mb-0 flex-grow-1 text-center">Users</h5>
-      </div>
-
-      {/* Search */}
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Tìm kiếm"
-      />
-
-      {/* Follower list */}
+    <div className="container mt-3" style={{ maxWidth: 1000 }}>
+    
       <ul className="list-group list-group-flush">
-        {followers.map((item, index) => (
+        {following.map((item, index) => (
           <li
             key={index}
             className="list-group-item d-flex align-items-center"
           >
             <img
-              src={item.avatar}
+              src={item.anh_dai_dien}
               alt="avatar"
               className="rounded-circle me-3"
               width={48}
               height={48}
             />
             <div className="flex-grow-1">
-              <div className="fw-bold">{item.name}</div>
-              <div className="text-muted small">{item.username}</div>
+              <div className="fw-bold">{item.ten_nguoi_dung}</div>
             </div>
-            <button className="btn btn-danger btn-sm rounded-pill">
-              Follow lại
+            <button
+              className="btn btn-outline-danger btn-sm rounded-pill"
+              onClick={() => handleUnfollow(item.ma_nguoi_dung)}
+            >
+              Hủy theo dõi
             </button>
           </li>
         ))}

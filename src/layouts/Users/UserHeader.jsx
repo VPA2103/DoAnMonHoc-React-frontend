@@ -5,9 +5,9 @@ import { FaInstagram } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import SuaProfile from "../../pages/User/SuaProfile/SuaProfile";
 const UserHeader = ({ user }) => {
-  const [showMenu, setShowMenu] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false); 
-  const menuRef = useRef(null);
+    const menuRef = useRef(null);
 // 1. Khai báo đường dẫn server (Quan trọng để hiển thị ảnh)
   const SERVER_URL = "http://127.0.0.1:8000/storage/";
   const secondaryBtnStyle = {
@@ -15,8 +15,7 @@ const UserHeader = ({ user }) => {
     color: "white",
     border: "none",
   };
-
-  // Click ra ngoài thì đóng menu
+  console.log('data: ',user)
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -30,7 +29,6 @@ const UserHeader = ({ user }) => {
 
   return (
     <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start mb-4">
-      {/* Avatar */}
       <div className="me-md-4 mb-3 mb-md-0">
         <div
           className="rounded-circle overflow-hidden d-flex justify-content-center align-items-center"
@@ -129,24 +127,12 @@ const UserHeader = ({ user }) => {
 
         <div className="d-flex gap-4 mb-3 text-white-50">
           <div>
-            <strong className="text-white">9995</strong> Following
+            <strong className="text-white">{user?.following}</strong> Following
           </div>
           <div>
-            <strong className="text-white">1057</strong> Followers
-          </div>
-          <div>
-            <strong className="text-white">729</strong> Likes
+            <strong className="text-white">{user?.followers}</strong> Followers
           </div>
         </div>
-
-        <p className="mb-1">Vào chốt đơn đi nào :&gt;</p>
-
-        <a
-          href="#"
-          className="text-white text-decoration-none fw-semibold d-flex align-items-center gap-1"
-        >
-          <FaInstagram /> Instagram: vpa_healthy.beauty
-        </a>
       </div>
 
       

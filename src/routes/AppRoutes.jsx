@@ -96,7 +96,7 @@ const AppRoutes = () => {
         <Route path="/user" element={<UserLayout />}>
           <Route index element={<div>Profile</div>} />
           <Route path="profile" element={<div>Profile</div>} />
-          <Route path="following" element={<DanhSachTheoDoi />} />
+          <Route path="following" element={<DanhSachTheoDoi/>} />
 
           <Route path="quanlicongthuc">
             <Route index element={<CongThucList />} />
