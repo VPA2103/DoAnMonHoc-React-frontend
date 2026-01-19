@@ -8,7 +8,6 @@ const UserHeader = ({ user }) => {
     const [showMenu, setShowMenu] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false); 
     const menuRef = useRef(null);
-// 1. Khai báo đường dẫn server (Quan trọng để hiển thị ảnh)
   const SERVER_URL = "http://127.0.0.1:8000/storage/";
   const secondaryBtnStyle = {
     backgroundColor: "#2F2F2F",
@@ -43,18 +42,16 @@ const UserHeader = ({ user }) => {
               user?.anh_dai_dien
                 ? (user.anh_dai_dien.startsWith('http') 
                     ? user.anh_dai_dien 
-                    : `${SERVER_URL}${user.anh_dai_dien}`) // Nối link server vào
-                : "https://placehold.co/100" // Ảnh mặc định nếu user chưa có ảnh
+                    : `${SERVER_URL}${user.anh_dai_dien}`) 
+                : "https://placehold.co/100" 
             }
             alt="Avatar"
             className="w-100 h-100 object-fit-cover"
-            // MỚI THÊM: Xử lý nếu ảnh bị lỗi tải thì tự đổi sang ảnh mẫu
             onError={(e) => {e.target.src = "https://placehold.co/100"}} 
           />
         </div>
       </div>
 
-      {/* Info */}
       <div className="flex-grow-1 w-100">
         <h2 className="fw-bold mb-1">{user?.ten_nguoi_dung}</h2>
 
@@ -67,7 +64,6 @@ const UserHeader = ({ user }) => {
             Edit profile
           </button>
 
-          {/* Nút cài đặt */}
           <div className="position-relative">
             <button
               className="btn py-1 px-2"
