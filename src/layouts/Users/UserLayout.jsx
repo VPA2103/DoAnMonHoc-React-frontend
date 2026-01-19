@@ -1,11 +1,28 @@
 import { Outlet } from "react-router-dom";
-import { useAuth } from "../../context/useAuth";
 import UserHeader from "../Users/UserHeader";
 import UserFooter from "../Users/UserFooter";
 import UserProfileTab from "../../components/UserProfile/UserProfileTab";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const UserLayout = () => {
-  const { user } = useAuth();
+    const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        "http://127.0.0.1:8000/api/profile",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUser(res.data.data);
+    };
+
+    fetchProfile();
+  }, []);
+
   if (!user) return null;
 
   return (
@@ -15,7 +32,7 @@ const UserLayout = () => {
         <UserProfileTab />
 
         <div className="row mt-3">
-          <Outlet />
+          <Outlet context={{ user, setUser }} />
         </div>
       </div>
 
