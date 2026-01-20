@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+const API = "http://localhost:8000/api";
+
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [pagination, setPagination] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     fetchRecipes(currentPage);
@@ -14,16 +18,56 @@ const Recipes = () => {
   const fetchRecipes = async (page = 1) => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/cong-thucc?page=${page}`
+        `${API}/cong-thucc?page=${page}`,
+        {
+          headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : {},
+        }
       );
 
-      setRecipes(res.data.data);
-      setPagination(res.data.pagination);
+      setRecipes(res.data.data || []);
+      setPagination(res.data.pagination || {});
     } catch (error) {
       console.error("Lỗi lấy danh sách công thức:", error);
     }
   };
-  //heloo
+
+  // ❤️ Toggle yêu thích
+  const handleToggleFavorite = async (e, recipeId) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!token) {
+      alert("Vui lòng đăng nhập");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${API}/yeu-thich/toggle`,
+        { ma_cong_thuc: recipeId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // dùng liked từ backend trả về
+      setRecipes((prev) =>
+        prev.map((r) =>
+          r.ma_cong_thuc === recipeId
+            ? { ...r, is_favorite: res.data.liked }
+            : r
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Có lỗi xảy ra");
+    }
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <h1>Danh sách công thức</h1>
@@ -45,7 +89,7 @@ const Recipes = () => {
             <div
               style={{
                 border: "1px solid #ddd",
-                borderRadius: 10,
+                borderRadius: 12,
                 overflow: "hidden",
                 background: "#fff",
               }}
@@ -57,22 +101,30 @@ const Recipes = () => {
                   alt={recipe.ten_cong_thuc}
                   style={{
                     width: "100%",
-                    height: 200,
+                    height: 180,
                     objectFit: "cover",
                   }}
                 />
 
                 {/* FAVORITE */}
                 <span
+                  onClick={(e) =>
+                    handleToggleFavorite(e, recipe.ma_cong_thuc)
+                  }
                   style={{
                     position: "absolute",
                     top: 10,
                     right: 10,
-                    fontSize: 24,
-                    color: recipe.is_favorite ? "red" : "#fff",
+                    fontSize: 22,
+                    cursor: "pointer",
+                    background: "rgba(255,255,255,0.8)",
+                    borderRadius: "50%",
+                    padding: "4px 6px",
                   }}
                 >
-                  {recipe.is_favorite ? "❤️" : "🤍"}
+                  {Number(recipe.is_favorite) === 1 || recipe.is_favorite === true
+                    ? "❤️"
+                    : "🤍"}
                 </span>
               </div>
 
@@ -84,17 +136,14 @@ const Recipes = () => {
 
                 <p>
                   <strong>Danh mục:</strong>{" "}
-                  {recipe.danh_muc?.ten_danh_muc || "Chưa rõ"}
+                  {recipe.danh_muc?.ten_danh_muc}
                 </p>
-
                 <p>
-                  <strong>Độ khó:</strong>{" "}
-                  {recipe.do_kho || "Đang cập nhật"}
+                  <strong>Độ khó:</strong> {recipe.do_kho}
                 </p>
-
                 <p>
                   <strong>Thời gian:</strong>{" "}
-                  {recipe.thoi_gian_nau || "?"} phút
+                  {recipe.thoi_gian_nau} phút
                 </p>
               </div>
             </div>
@@ -111,7 +160,7 @@ const Recipes = () => {
             style={{
               margin: "0 5px",
               padding: "8px 12px",
-              borderRadius: 5,
+              borderRadius: 6,
               border: "1px solid #ccc",
               background:
                 currentPage === i + 1 ? "#007bff" : "#fff",
@@ -128,9 +177,4 @@ const Recipes = () => {
   );
 };
 
-export default Recipes;
-
-
-
-
-
+export default Recipes; 
