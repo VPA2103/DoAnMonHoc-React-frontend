@@ -13,7 +13,7 @@ const QuanLyBinhLuan = () => {
   const fetchBinhLuan = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/binh-luan/cua-toi",
+        "http://localhost:8000/api/user/binh-luan/toi",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -31,7 +31,7 @@ const QuanLyBinhLuan = () => {
     if (!window.confirm("Bạn có chắc muốn xoá bình luận này?")) return;
 
     try {
-      await axios.delete(`http://localhost:8000/api/binh-luan/${id}`, {
+      await axios.delete(`http://localhost:8000/api/user/binh-luan/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

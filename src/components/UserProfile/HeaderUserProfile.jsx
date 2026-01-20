@@ -31,8 +31,8 @@ export default function HeaderUserProfile() {
             <button className="btn btn-dark btn-sm fw-bold px-3 bg-opacity-50">
               Promote post
             </button>
-            <button className="btn btn-dark btn-sm px-2">
-              <i className="bi bi-gear-fill"></i> {/* Cần Bootstrap Icons */}
+            < className="btn btn-dark btn-sm px-2">
+              <i clasbuttonsName="bi bi-gear-fill"></i> {/* Cần Bootstrap Icons */}
               ⚙️
             </button>
             <button className="btn btn-dark btn-sm px-2">↗️</button>

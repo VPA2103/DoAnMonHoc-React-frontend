@@ -48,6 +48,7 @@ import DanhSachBlog from '../pages/User/QuanLyBlog/DanhSachBlog';
 import ThemSuaBlog from '../pages/User/QuanLyBlog/ThemSuaBlog';
 import ChiTietBlog from '../pages/User/QuanLyBlog/ChiTietBlog';
 import BlogListPage from "../pages/User/QuanLyBlog/BlogListPage";
+import QuanLyDanhGia from "../pages/User/QuanLyDanhGia/QuanLyDanhGia";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -124,7 +125,8 @@ const AppRoutes = () => {
              <Route path="sua/:id" element={<ThemSuaBlog />} />
             <Route path="xem/:id" element={<ChiTietBlog />} />          </Route>
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
-
+          <Route path="quan-ly/danh-gia" element={<QuanLyDanhGia />} />
+          
           <Route path="/user/favorites" element={<QuanLyYeuThich />} />
         </Route>
       </Route>
