@@ -44,7 +44,9 @@ import AdminProfileContainer from "../pages/Admin/Profile/AdminProfileContainer"
 import Categories from "../pages/Admin/Categories/Categories";
 import FeedBlogs from "../pages/User/FeedBlogs/FeedBlogs";
 import QuanLyYeuThich from "../pages/User/QuanLyYeuThich/QuanLyYeuThich";
-
+import DanhSachBlog from '../pages/User/QuanLyBlog/DanhSachBlog';
+import ThemSuaBlog from '../pages/User/QuanLyBlog/ThemSuaBlog';
+import ChiTietBlog from '../pages/User/QuanLyBlog/ChiTietBlog';
 const AppRoutes = () => {
   return (
     <Routes>
@@ -114,6 +116,12 @@ const AppRoutes = () => {
             <Route path="sua/:id" element={<SuaKeHoachBuaAn />} />
           </Route>
 
+          <Route path="blog">
+             <Route index element={<DanhSachBlog />} />
+             <Route path="them" element={<ThemSuaBlog />} />
+             <Route path="sua/:id" element={<ThemSuaBlog />} />
+            <Route path="xem/:id" element={<ChiTietBlog />} />          </Route>
+          
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
 
           <Route path="/user/favorites" element={<QuanLyYeuThich />} />
@@ -123,4 +131,4 @@ const AppRoutes = () => {
   );
 };
 
-export default AppRoutes;
+export default AppRoutes;//hello

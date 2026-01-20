@@ -75,13 +75,13 @@ const Header = () => {
               <Link
                 className="nav-link dropdown-toggle text-dark"
                 data-bs-toggle="dropdown"
-                to="#"
+                to=""
               >
                 Blog
               </Link>
               <ul className="dropdown-menu">
                 <li>
-                  <Link className="dropdown-item" to="#">
+                  <Link className="dropdown-item" to="/user/blog">
                     Bài viết
                   </Link>
                 </li>
@@ -110,6 +110,12 @@ const Header = () => {
             <li className="nav-item">
               <Link className="nav-link text-dark" to="/feed-blogs">
                 Bài đăng người theo dõi
+              </Link>
+            </li>
+            
+            <li className="nav-item">
+              <Link className="nav-link text-dark" to="/user/blog">
+                Quản lý Blog
               </Link>
             </li>
           </ul>
