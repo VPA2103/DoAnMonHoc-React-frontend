@@ -123,7 +123,9 @@ const AppRoutes = () => {
              <Route index element={<DanhSachBlog />} />
              <Route path="them" element={<ThemSuaBlog />} />
              <Route path="sua/:id" element={<ThemSuaBlog />} />
-            <Route path="xem/:id" element={<ChiTietBlog />} />          </Route>
+            <Route path="xem/:id" element={<ChiTietBlog />} />          
+            
+            </Route>
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
           <Route path="quanlicongthuc/sua/:id/buoc-nau" element={<QuanLyBuocNau />} />
           <Route path="quan-ly-buoc-nau/:id" element={<QuanLyBuocNau />} />
