@@ -75,7 +75,7 @@ function CongThucList() {
                     <th style={{ width: "10%" }}>Độ khó</th>
                     <th style={{ width: "10%" }}>Trạng thái</th>
                     <th style={{ width: "15%" }}>Thời gian nấu</th>
-                    <th style={{ width: "15%" }}>Thao tác</th>
+                    <th style={{ width: "20%" }}>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="text-center">
@@ -142,6 +142,14 @@ function CongThucList() {
                       </td>
                       <td className="text-center">
                         <div className="d-flex justify-content-center gap-2">
+                          <Link
+                              to={`/user/xem-cong-thuc/${ct.ma_cong_thuc}`}
+                              className="btn btn-sm btn-outline-info"
+                              title="Xem chi tiết"
+                            >
+                              <i className="bi bi-eye-fill me-1"></i>
+                              Xem
+                            </Link>
                           <Link
                             to={`/user/quanlicongthuc/sua/${ct.ma_cong_thuc}`}
                             className="btn btn-sm btn-outline-warning"

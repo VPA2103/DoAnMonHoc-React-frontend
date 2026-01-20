@@ -1,20 +1,26 @@
-
 import { useState, useRef, useEffect } from "react";
 import { BsGear, BsShare } from "react-icons/bs";
-import { FaInstagram } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import SuaProfile from "../../pages/User/SuaProfile/SuaProfile";
+// Thêm import icon person (từ react-icons/bi – rất phổ biến và nhẹ)
+import { BiUserCircle } from "react-icons/bi";
+
 const UserHeader = ({ user }) => {
-    const [showMenu, setShowMenu] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false); 
-    const menuRef = useRef(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const menuRef = useRef(null);
+
   const SERVER_URL = "http://127.0.0.1:8000/storage/";
+
   const secondaryBtnStyle = {
     backgroundColor: "#2F2F2F",
     color: "white",
     border: "none",
   };
-  console.log('data: ',user)
+
+  // Xóa console.log khi không cần debug nữa
+  // console.log('data: ', user);
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -29,27 +35,44 @@ const UserHeader = ({ user }) => {
   return (
     <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start mb-4">
       <div className="me-md-4 mb-3 mb-md-0">
+        {/* ==== PHẦN AVATAR ĐÃ SỬA (thay toàn bộ div này) ==== */}
         <div
-          className="rounded-circle overflow-hidden d-flex justify-content-center align-items-center"
+          className="rounded-circle overflow-hidden position-relative"
           style={{
             width: "116px",
             height: "116px",
             border: "1px solid #2F2F2F",
           }}
         >
-         <img
-            src={
-              user?.anh_dai_dien
-                ? (user.anh_dai_dien.startsWith('http') 
-                    ? user.anh_dai_dien 
-                    : `${SERVER_URL}${user.anh_dai_dien}`) 
-                : "https://placehold.co/100" 
-            }
-            alt="Avatar"
-            className="w-100 h-100 object-fit-cover"
-            onError={(e) => {e.target.src = "https://placehold.co/100"}} 
-          />
+          {/* Fallback icon person – luôn hiện ở dưới cùng (nền xám đậm phù hợp theme tối) */}
+          <div
+            className="w-100 h-100 bg-secondary d-flex justify-content-center align-items-center position-absolute top-0 start-0 rounded-circle"
+          >
+            <BiUserCircle size={90} className="text-white opacity-75" />
+          </div>
+
+          {/* Ảnh thật (nếu có) – overlay lên trên fallback */}
+          {user?.anh_dai_dien && (
+            <img
+              src={
+                user.anh_dai_dien.startsWith("http")
+                  ? user.anh_dai_dien
+                  : `${SERVER_URL}${user.anh_dai_dien}`
+              }
+              alt="Avatar"
+              className="w-100 h-100 object-fit-cover position-absolute top-0 start-0 rounded-circle"
+              onError={(e) => {
+                // Khi ảnh lỗi → ẩn ảnh, fallback icon sẽ hiện ra
+                e.target.style.display = "none";
+              }}
+              onLoad={(e) => {
+                // Khi load thành công → hiển thị ảnh
+                e.target.style.display = "block";
+              }}
+            />
+          )}
         </div>
+        {/* ==== KẾT THÚC PHẦN SỬA ==== */}
       </div>
 
       <div className="flex-grow-1 w-100">
@@ -59,7 +82,7 @@ const UserHeader = ({ user }) => {
           <button
             className="btn fw-semibold px-4 py-1 text-white"
             style={{ backgroundColor: "#FE2C55", border: "none" }}
-              onClick={() => setShowEditModal(true)}  
+            onClick={() => setShowEditModal(true)}
           >
             Edit profile
           </button>
@@ -97,21 +120,6 @@ const UserHeader = ({ user }) => {
                 >
                   🗨️ Quản lý bình luận
                 </Link>
-
-                {/* <Link
-                  to="/quan-ly/danh-gia"
-                  className="d-block px-3 py-2 text-white text-decoration-none"
-                  onClick={() => setShowMenu(false)}
-                  style={{ cursor: "pointer" }}
-                  onMouseOver={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#2F2F2F")
-                  }
-                  onMouseOut={(e) =>
-                    (e.currentTarget.style.backgroundColor = "transparent")
-                  }
-                >
-                  ⭐ Quản lý đánh giá
-                </Link> */}
               </div>
             )}
           </div>
@@ -123,24 +131,21 @@ const UserHeader = ({ user }) => {
 
         <div className="d-flex gap-4 mb-3 text-white-50">
           <div>
-            <strong className="text-white">{user?.following}</strong> Following
+            <strong className="text-white">{user?.following || 0}</strong> Following
           </div>
           <div>
-            <strong className="text-white">{user?.followers}</strong> Followers
+            <strong className="text-white">{user?.followers || 0}</strong> Followers
           </div>
         </div>
       </div>
 
-      
-
-      <SuaProfile 
-        show={showEditModal} 
-        handleClose={() => setShowEditModal(false)} 
-        currentUser={user} 
+      <SuaProfile
+        show={showEditModal}
+        handleClose={() => setShowEditModal(false)}
+        currentUser={user}
       />
     </div>
   );
 };
 
 export default UserHeader;
-
