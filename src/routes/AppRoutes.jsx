@@ -42,6 +42,7 @@ import KeHoachBuaAnViewPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnViewPage
 import KeHoachBuaAnDetailPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnDetailPage";
 import AdminProfileContainer from "../pages/Admin/Profile/AdminProfileContainer";
 import Categories from "../pages/Admin/Categories/Categories";
+import FeedBlogs from "../pages/User/FeedBlogs/FeedBlogs";
 
 const AppRoutes = () => {
   return (
@@ -64,6 +65,8 @@ const AppRoutes = () => {
 
         <Route path="/kehoachbuaan" element={<KeHoachBuaAnViewPage />} />
         <Route path="/kehoachbuaan/:id" element={<KeHoachBuaAnDetailPage />} />
+        <Route path="/feed-blogs" element={<FeedBlogs />} />
+
       </Route>
 
       {/* 🛠 ADMIN */}
@@ -96,7 +99,7 @@ const AppRoutes = () => {
         <Route path="/user" element={<UserLayout />}>
           <Route index element={<div>Profile</div>} />
           <Route path="profile" element={<div>Profile</div>} />
-          <Route path="following" element={<DanhSachTheoDoi />} />
+          <Route path="following" element={<DanhSachTheoDoi/>} />
 
           <Route path="quanlicongthuc">
             <Route index element={<CongThucList />} />

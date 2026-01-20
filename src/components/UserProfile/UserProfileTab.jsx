@@ -46,7 +46,7 @@ export default function UserProfileTab() {
           to="/user/following"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          Theo Dõi
+          Đang Theo Dõi
         </NavLink>
       </li>
       <li className="nav-item">
