@@ -43,6 +43,7 @@ import KeHoachBuaAnDetailPage from "../pages/KeHoachBuaAnPage/KeHoachBuaAnDetail
 import AdminProfileContainer from "../pages/Admin/Profile/AdminProfileContainer";
 import Categories from "../pages/Admin/Categories/Categories";
 import FeedBlogs from "../pages/User/FeedBlogs/FeedBlogs";
+import QuanLyYeuThich from "../pages/User/QuanLyYeuThich/QuanLyYeuThich";
 
 const AppRoutes = () => {
   return (
@@ -114,6 +115,8 @@ const AppRoutes = () => {
           </Route>
 
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
+
+          <Route path="/user/favorites" element={<QuanLyYeuThich />} />
         </Route>
       </Route>
     </Routes>
