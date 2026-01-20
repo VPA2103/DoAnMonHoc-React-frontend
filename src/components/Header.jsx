@@ -82,12 +82,12 @@ const Header = () => {
               <ul className="dropdown-menu">
                 <li>
                   <Link className="dropdown-item" to="/user/blog">
-                    Bài viết
+                    Quản lý blog cá nhân
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="#">
-                    Chia sẻ
+                  <Link className="dropdown-item" to="/blogs">
+                    Xem blog
                   </Link>
                 </li>
               </ul>
@@ -113,11 +113,11 @@ const Header = () => {
               </Link>
             </li>
             
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link text-dark" to="/user/blog">
                 Quản lý Blog
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </nav>

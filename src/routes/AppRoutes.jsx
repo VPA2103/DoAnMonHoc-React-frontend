@@ -47,6 +47,7 @@ import QuanLyYeuThich from "../pages/User/QuanLyYeuThich/QuanLyYeuThich";
 import DanhSachBlog from '../pages/User/QuanLyBlog/DanhSachBlog';
 import ThemSuaBlog from '../pages/User/QuanLyBlog/ThemSuaBlog';
 import ChiTietBlog from '../pages/User/QuanLyBlog/ChiTietBlog';
+import BlogListPage from "../pages/User/QuanLyBlog/BlogListPage";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -65,7 +66,8 @@ const AppRoutes = () => {
         <Route path={PATH.RECIPES} element={<Recipes />} />
         <Route path={PATH.RECIPE_DETAIL} element={<RecipeDetailPage />} />
         <Route path="/contact" element={<Contact />} />
-
+        <Route path="/blogs" element={<BlogListPage />} />
+        <Route path="/blog/:id" element={<ChiTietBlog />} />    
         <Route path="/kehoachbuaan" element={<KeHoachBuaAnViewPage />} />
         <Route path="/kehoachbuaan/:id" element={<KeHoachBuaAnDetailPage />} />
         <Route path="/feed-blogs" element={<FeedBlogs />} />
@@ -121,7 +123,6 @@ const AppRoutes = () => {
              <Route path="them" element={<ThemSuaBlog />} />
              <Route path="sua/:id" element={<ThemSuaBlog />} />
             <Route path="xem/:id" element={<ChiTietBlog />} />          </Route>
-          
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
 
           <Route path="/user/favorites" element={<QuanLyYeuThich />} />
@@ -131,4 +132,4 @@ const AppRoutes = () => {
   );
 };
 
-export default AppRoutes;//hello
+export default AppRoutes;

@@ -12,7 +12,6 @@ const DanhSachBlog = () => {
 
     const fetchBlogs = async () => {
         try {
-            // GET danh sách là public → không cần token
             const res = await axios.get('http://localhost:8000/api/blogs');
             setBlogs(res.data);
         } catch (error) {
@@ -21,9 +20,8 @@ const DanhSachBlog = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm('Bạn có chắc muốn xóa?')) {
+        if (window.confirm('Bạn có chắc muốn xóa bài viết này?')) {
             const token = localStorage.getItem('token');
-
             const config = {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -32,55 +30,85 @@ const DanhSachBlog = () => {
 
             try {
                 await axios.delete(`http://localhost:8000/api/blogs/${id}`, config);
-                fetchBlogs(); // Reload danh sách
+                alert("Xóa thành công!");
+                fetchBlogs(); 
             } catch (error) {
                 console.error(error);
-                alert('Lỗi xóa bài viết');
-                if (error.response) {
-                    console.log('Status:', error.response.status);
-                    console.log('Message:', error.response.data.message || error.response.data);
-                }
+                alert('Lỗi xóa bài viết: ' + (error.response?.data?.message || error.message));
             }
         }
     };
 
     return (
         <Container className="mt-4 text-white">
-            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Quản lý Blog</h2>
                 <Link to="/user/blog/them" className="btn btn-primary">
                     + Thêm bài viết
                 </Link>
             </div>
 
-            <Table striped bordered hover variant="dark">
+            <Table striped bordered hover variant="dark" responsive>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Tiêu đề</th>
-                        <th>Ngày tạo</th>
-                        <th>Hành động</th>
+                        <th style={{width: '5%'}}>ID</th>
+                        <th style={{width: '15%'}}>Hình ảnh</th>
+                        <th style={{width: '40%'}}>Tiêu đề</th>
+                        <th style={{width: '15%'}}>Ngày tạo</th>
+                        <th style={{width: '25%'}}>Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {blogs.map((blog) => (
-                        <tr key={blog.ma_blog}>
-                            <td>{blog.ma_blog}</td>
-                            <td>{blog.tieu_de}</td>
-                            <td>{new Date(blog.created_at).toLocaleDateString('vi-VN')}</td>
-                            <td>
-                                <Link to={`/user/blog/xem/${blog.ma_blog}`} className="btn btn-info btn-sm me-2">
-                                    Xem
-                                </Link>
-                                <Link to={`/user/blog/sua/${blog.ma_blog}`} className="btn btn-warning btn-sm me-2">
-                                    Sửa
-                                </Link>
-                                <Button variant="danger" size="sm" onClick={() => handleDelete(blog.ma_blog)}>
-                                    Xóa
-                                </Button>
-                            </td>
+                    {blogs.length > 0 ? (
+                        blogs.map((blog) => (
+                            <tr key={blog.id || blog.ma_blog}> 
+                                <td>{blog.id || blog.ma_blog}</td>
+                                
+                                {/* --- PHẦN XỬ LÝ ẢNH --- */}
+                                <td>
+                                    {blog.hinh_anh ? (
+                                        <img 
+                                            src={`http://localhost:8000/storage/${blog.hinh_anh}`} 
+                                            alt="Thumbnail"
+                                            style={{ width: '80px', height: '60px', objectFit: 'cover', borderRadius: '4px' }}
+                                            
+                                            // LOGIC QUAN TRỌNG: Nếu ảnh lỗi -> Ẩn luôn (display: none)
+                                            onError={(e) => { 
+                                                e.target.style.display = 'none'; 
+                                            }}
+                                        />
+                                    ) : (
+                                        <span>Không có ảnh</span>
+                                    )}
+                                </td>
+                                {/* ----------------------- */}
+
+                                <td>{blog.tieu_de}</td>
+                                
+                                <td>
+                                    {blog.created_at ? new Date(blog.created_at).toLocaleDateString('vi-VN') : 'N/A'}
+                                </td>
+                                
+                                <td>
+                                    <Link to={`/user/blog/xem/${blog.id || blog.ma_blog}`} className="btn btn-info btn-sm me-2">
+                                        <i className="bi bi-eye"></i> Xem
+                                    </Link>
+                                    
+                                    <Link to={`/user/blog/sua/${blog.id || blog.ma_blog}`} className="btn btn-warning btn-sm me-2">
+                                        <i className="bi bi-pencil"></i> Sửa
+                                    </Link>
+                                    
+                                    <Button variant="danger" size="sm" onClick={() => handleDelete(blog.id || blog.ma_blog)}>
+                                        <i className="bi bi-trash"></i> Xóa
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5" className="text-center">Chưa có bài viết nào.</td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </Table>
         </Container>
