@@ -53,6 +53,17 @@ const AdminSidebar = () => {
             Categories
           </NavLink>
         </li>
+
+        <li className="nav-item">
+          <NavLink
+            to="quanliblog"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? "active bg-primary" : ""}`
+            }
+          >
+            Quản lí Blog
+          </NavLink>
+        </li>
         <li className="nav-item">
           <NavLink
             to="quanlidanhmuc"
