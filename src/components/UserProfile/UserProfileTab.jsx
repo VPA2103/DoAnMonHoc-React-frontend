@@ -71,12 +71,17 @@ export default function UserProfileTab() {
           Quản lý Blog
         </NavLink>
       </li>
-      <li className="nav-item">
+      <li className="nav-item"> 
         <NavLink
           to="/user/quanlibuocnau"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Quản lý bước nấu
+        </NavLink>
+      </li>
+       <li className="nav-item">
+        <NavLink to="/user/quanlynguyenlieu" className={({ isActive }) => isActive ? activeStyle : normalStyle}>
+          Quản lý nguyên liệu
         </NavLink>
       </li>
     </ul>
