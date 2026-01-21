@@ -3,143 +3,154 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
 const ThemSuaBlog = () => {
-  const { id } = useParams(); // Nếu có id là Sửa, không có id là Thêm mới
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // State
   const [tieuDe, setTieuDe] = useState("");
   const [noiDung, setNoiDung] = useState("");
   const [imageFile, setImageFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(""); 
+  const [imagePreview, setImagePreview] = useState(null); // 🔥 preview ảnh
 
-  // 1. Load dữ liệu cũ (Chỉ chạy khi đang Sửa)
+  /* ================= LOAD BLOG (KHI SỬA) ================= */
   useEffect(() => {
-    if (id) {
-      axios.get(`http://localhost:8000/api/blogs/${id}`)
-        .then((res) => {
-          setTieuDe(res.data.tieu_de);
-          setNoiDung(res.data.noi_dung);
-          setPreviewImage(res.data.hinh_anh);
-        })
-        .catch(err => console.error(err));
-    }
+    if (!id) return;
+
+    axios
+      .get(`http://localhost:8000/api/blogs/${id}`)
+      .then((res) => {
+        setTieuDe(res.data.tieu_de);
+        setNoiDung(res.data.noi_dung);
+
+        // ✅ Ảnh cũ từ backend
+        if (res.data.hinh_anh_url) {
+          setImagePreview(res.data.hinh_anh_url);
+        }
+      })
+      .catch(() => alert("Không tải được blog"));
   }, [id]);
 
-  // 2. Xử lý chọn file ảnh
-  const handleFileChange = (e) => {
+  /* ================= CHỌN ẢNH ================= */
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setPreviewImage(URL.createObjectURL(file));
-    }
+
+    if (!file) return;
+
+    setImageFile(file);
+
+    // ✅ Preview ảnh mới
+    setImagePreview(URL.createObjectURL(file));
   };
 
-  // 3. Gửi dữ liệu (QUAN TRỌNG: Đã sửa logic Token và URL)
+  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // --- LẤY TOKEN TỪ LOCAL STORAGE ---
-    // Kiểm tra tab Application xem bạn lưu là 'token' hay 'ACCESS_TOKEN'
-    const token = localStorage.getItem("token"); 
-
+    const token = localStorage.getItem("token");
     if (!token) {
-      alert("Bạn chưa đăng nhập!");
+      alert("Chưa đăng nhập");
       return;
     }
 
     const formData = new FormData();
     formData.append("tieu_de", tieuDe);
     formData.append("noi_dung", noiDung);
-    
+
+    // ⚠️ CHỈ GỬI ẢNH KHI CÓ CHỌN
     if (imageFile) {
       formData.append("hinh_anh", imageFile);
     }
 
-    // --- XỬ LÝ URL VÀ METHOD ---
-    let url = "http://localhost:8000/api/blogs"; // Mặc định là Thêm mới
-
-    if (id) {
-      // Nếu là Sửa (Update)
-      url = `http://localhost:8000/api/blogs/${id}`;
-      formData.append("_method", "PUT"); // Laravel cần cái này khi update có file
-    }
-
     try {
-      await axios.post(url, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${token}` // <--- DÒNG NÀY GIÚP HẾT LỖI 401
-        },
-      });
+      if (id) {
+        // UPDATE
+        formData.append("_method", "PUT");
 
-      alert(id ? "Cập nhật thành công!" : "Thêm bài viết mới thành công!");
+        await axios.post(
+          `http://localhost:8000/api/blogs/${id}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } else {
+        // CREATE
+        await axios.post(
+          "http://localhost:8000/api/blogs",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
+
+      alert("Lưu bài viết thành công");
       navigate("/user/blog");
     } catch (error) {
-      console.error("Lỗi:", error);
-      if (error.response && error.response.status === 401) {
-          alert("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.");
-      } else {
-          alert("Có lỗi xảy ra, vui lòng thử lại.");
-      }
+      console.error(error);
+      alert("Lỗi khi lưu blog");
     }
   };
 
   return (
-    <div className="container py-5">
-       <h2 className="text-white mb-4">
-         {id ? "Cập nhật bài viết" : "Thêm bài viết mới"}
-       </h2>
-       
-       <div className="card p-4">
-         <form onSubmit={handleSubmit}>
-            {/* Tiêu đề */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">Tiêu đề bài viết</label>
-              <input 
-                type="text" 
-                className="form-control" 
-                value={tieuDe} 
-                onChange={(e) => setTieuDe(e.target.value)} 
-                required
-              />
-            </div>
+    <div className="container mt-4">
+      <h3 className="mb-4">{id ? "Sửa blog" : "Thêm blog"}</h3>
 
-            {/* Chọn ảnh */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">Hình ảnh đại diện</label>
-              <input 
-                type="file" 
-                className="form-control" 
-                accept="image/*"
-                onChange={handleFileChange} 
-              />
-              {/* Preview ảnh */}
-              {previewImage && (
-                <div className="mt-3">
-                  <p className="mb-1">Ảnh hiện tại:</p>
-                  <img src={previewImage} alt="Preview" style={{ height: "150px", borderRadius: "5px", objectFit: "cover" }} />
-                </div>
-              )}
-            </div>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        {/* TIÊU ĐỀ */}
+        <input
+          className="form-control mb-3"
+          placeholder="Tiêu đề"
+          value={tieuDe}
+          onChange={(e) => setTieuDe(e.target.value)}
+          required
+        />
 
-            {/* Nội dung */}
-            <div className="mb-3">
-              <label className="form-label fw-bold">Nội dung chi tiết</label>
-              <textarea 
-                className="form-control" 
-                rows="5"
-                value={noiDung}
-                onChange={(e) => setNoiDung(e.target.value)}
-                required
-              ></textarea>
-            </div>
+        {/* NỘI DUNG */}
+        <textarea
+          className="form-control mb-3"
+          rows="6"
+          placeholder="Nội dung"
+          value={noiDung}
+          onChange={(e) => setNoiDung(e.target.value)}
+          required
+        />
 
-            <button type="submit" className="btn btn-primary">
-              {id ? "Lưu thay đổi" : "Đăng bài"}
-            </button>
-            <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate(-1)}>Hủy</button>
-         </form>
-       </div>
+        {/* ẢNH */}
+        <input
+          type="file"
+          className="form-control mb-3"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
+
+        {/* PREVIEW ẢNH */}
+        {imagePreview && (
+          <div className="mb-3">
+            <p className="mb-1 text-muted">Xem trước hình ảnh:</p>
+            <img
+              src={imagePreview}
+              alt="Preview"
+              style={{
+                width: "250px",
+                height: "160px",
+                objectFit: "cover",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+              }}
+            />
+          </div>
+        )}
+
+        <button className="btn btn-primary">
+          {id ? "Cập nhật" : "Đăng bài"}
+        </button>
+      </form>
     </div>
   );
 };
