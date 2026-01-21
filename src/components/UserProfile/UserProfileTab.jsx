@@ -36,7 +36,7 @@ export default function UserProfileTab() {
           to="/user/favorites"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          Favorites
+          Yêu Thích
         </NavLink>
       </li>
       <li className="nav-item">
