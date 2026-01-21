@@ -75,7 +75,7 @@ function CongThucList() {
                     <th style={{ width: "10%" }}>Độ khó</th>
                     <th style={{ width: "10%" }}>Trạng thái</th>
                     <th style={{ width: "15%" }}>Thời gian nấu</th>
-                    <th style={{ width: "15%" }}>Thao tác</th>
+                    <th style={{ width: "20%" }}>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="text-center">
@@ -142,6 +142,14 @@ function CongThucList() {
                       </td>
                       <td className="text-center">
                         <div className="d-flex justify-content-center gap-2">
+                        <Link
+                        to={`/user/quanlicongthuc/buoc-nau/${ct.ma_cong_thuc || ct.id}`}
+                          className="btn btn-sm btn-outline-primary"
+                          title="Quản lý bước nấu"
+                        >
+                          <i className="bi bi-list-ol me-1"></i>
+                          Bước nấu
+                        </Link>
                           <Link
                             to={`/user/quanlicongthuc/sua/${ct.ma_cong_thuc}`}
                             className="btn btn-sm btn-outline-warning"

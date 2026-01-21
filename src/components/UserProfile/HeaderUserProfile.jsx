@@ -1,5 +1,4 @@
 export default function HeaderUserProfile() {
-  
   return (
     <div>
       <div className="row mb-4">
@@ -31,10 +30,14 @@ export default function HeaderUserProfile() {
             <button className="btn btn-dark btn-sm fw-bold px-3 bg-opacity-50">
               Promote post
             </button>
-            < className="btn btn-dark btn-sm px-2">
-              <i clasbuttonsName="bi bi-gear-fill"></i> {/* Cần Bootstrap Icons */}
+            
+            {/* --- ĐÃ SỬA LỖI Ở ĐÂY --- */}
+            <button className="btn btn-dark btn-sm px-2">
+              <i className="bi bi-gear-fill"></i> {/* Đã sửa clasbuttonsName thành className */}
               ⚙️
             </button>
+            {/* ----------------------- */}
+
             <button className="btn btn-dark btn-sm px-2">↗️</button>
           </div>
         </div>

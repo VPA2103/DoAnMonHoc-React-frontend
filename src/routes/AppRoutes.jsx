@@ -49,7 +49,8 @@ import DanhSachBlog from '../pages/User/QuanLyBlog/DanhSachBlog';
 import ThemSuaBlog from '../pages/User/QuanLyBlog/ThemSuaBlog';
 import ChiTietBlog from '../pages/User/QuanLyBlog/ChiTietBlog';
 import BlogListPage from "../pages/User/QuanLyBlog/BlogListPage";
-import QuanLyDanhGia from "../pages/User/QuanLyDanhGia/QuanLyDanhGia";
+// import QuanLyDanhGia from "../pages/User/QuanLyDanhGia/QuanLyDanhGia";
+import QuanLyBuocNau from '../pages/User/QuanLyBuocNau/QuanLyBuocNau';
 const AppRoutes = () => {
   return (
     <Routes>
@@ -95,6 +96,8 @@ const AppRoutes = () => {
           <Route path="kehoachbuaan" element={<Categories />} />
           <Route path="categories" element={<Categories />} />
           <Route path="quanliblog" element={<AdminBlog />} />
+          {/* <Route path="categories" element={<Categories />} /> */}
+
 
 
 
@@ -112,8 +115,8 @@ const AppRoutes = () => {
             <Route index element={<CongThucList />} />
             <Route path="them" element={<CreateCongThuc />} />
             <Route path="sua/:id" element={<CongThucEdit />} />
+          <Route path="buoc-nau/:id" element={<QuanLyBuocNau />} />
           </Route>
-
           <Route path="kehoachbuaan">
             <Route index element={<KeHoachBuaAn />} />
             <Route path="them" element={<ThemMoiKeHoachBuaAn />} />
@@ -124,11 +127,12 @@ const AppRoutes = () => {
              <Route index element={<DanhSachBlog />} />
              <Route path="them" element={<ThemSuaBlog />} />
              <Route path="sua/:id" element={<ThemSuaBlog />} />
-            <Route path="xem/:id" element={<ChiTietBlog />} />          </Route>
+            <Route path="xem/:id" element={<ChiTietBlog />} />          
+            
+            </Route>
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
-          <Route path="quan-ly/danh-gia" element={<QuanLyDanhGia />} />
-          
-          <Route path="/user/favorites" element={<QuanLyYeuThich />} />
+          <Route path="quanlibuocnau" element={<QuanLyBuocNau />} />
+          <Route path="favorites" element={<QuanLyYeuThich />} />
         </Route>
       </Route>
     </Routes>

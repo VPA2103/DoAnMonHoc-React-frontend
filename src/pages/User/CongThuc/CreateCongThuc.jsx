@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { createCongThuc, getDanhMucs } from "../../../services/CongThucService";
+// import { createCongThuc, getDanhMucs } from "../../../services/CongThucService";
+import { createCongThuc, getDanhMucs, createBuocNau } from "../../../services/CongThucService";
 import { useNavigate, Link } from "react-router-dom";
-
+import StepsSection from "./StepsSection"; // Import component giao diện bước nấu 
 function CreateCongThuc() {
   const navigate = useNavigate();
 
@@ -15,7 +16,13 @@ function CreateCongThuc() {
   });
 
   const [anh, setAnh] = useState(null); // 👉 ảnh
-
+// --- STATE 2: QUẢN LÝ ID MÓN VỪA TẠO ---
+  const [createdId, setCreatedId] = useState(null); // Khi có ID này -> Hiện Bước 2
+  const [loading, setLoading] = useState(false);
+  // --- STATE 3: CÁC BƯỚC NẤU ---
+  const [steps, setSteps] = useState([
+    { noi_dung: "", hinh_anh: null, preview: "" }
+  ]);
   // Load danh mục
   useEffect(() => {
     const fetchDanhMuc = async () => {
@@ -46,12 +53,17 @@ const handleSubmit = async (e) => {
     return;
   }
 
-  const formData = new FormData();
-  formData.append("ten_cong_thuc", form.ten_cong_thuc);
-  formData.append("ma_danh_muc", Number(form.ma_danh_muc));
-  formData.append("do_kho", form.do_kho);
-  formData.append("mo_ta", form.mo_ta || "");
-
+  // const formData = new FormData();
+  // formData.append("ten_cong_thuc", form.ten_cong_thuc);
+  // formData.append("ma_danh_muc", Number(form.ma_danh_muc));
+  // formData.append("do_kho", form.do_kho);
+  // formData.append("mo_ta", form.mo_ta || "");
+  setLoading(true);
+    const formData = new FormData();
+    formData.append("ten_cong_thuc", form.ten_cong_thuc);
+    formData.append("ma_danh_muc", Number(form.ma_danh_muc));
+    formData.append("do_kho", form.do_kho);
+    formData.append("mo_ta", form.mo_ta || "");
   if (form.thoi_gian_nau) {
     formData.append("thoi_gian_nau", Number(form.thoi_gian_nau));
   }
