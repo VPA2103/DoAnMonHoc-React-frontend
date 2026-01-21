@@ -25,14 +25,6 @@ const Header = () => {
         <div className="container d-flex align-items-center justify-content-between">
           <div className="text-white fw-bold">logo</div>
 
-          <div className="w-50">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Tìm kiếm..."
-            />
-          </div>
-
           <div className="text-white d-flex gap-3 fs-5">
             <i className="bi bi-heart"></i>
             <i className="bi bi-chat"></i>
