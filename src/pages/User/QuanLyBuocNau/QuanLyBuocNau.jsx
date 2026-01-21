@@ -1,273 +1,358 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  getBuocNauByCongThuc,
+  createBuocNau,
+  updateBuocNau,
+  deleteBuocNau,
+  getCongThucById,
+  getAllCongThuc,
+} from "../../../services/CongThucService";
 
 const QuanLyBuocNau = () => {
-  const { id } = useParams(); // ma_cong_thuc từ URL
-  const [steps, setSteps] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams(); // Lấy ID từ URL (nếu có)
+  const navigate = useNavigate();
 
-  // State form chung (thêm/sửa)
-  const [soThuTu, setSoThuTu] = useState("");
-  const [noiDung, setNoiDung] = useState("");
-  const [hinhAnh, setHinhAnh] = useState(null); // File ảnh mới chọn
-  const [previewAnh, setPreviewAnh] = useState(""); // URL preview (mới hoặc cũ)
-  const [editingId, setEditingId] = useState(null); // null = thêm mới
+  // State quản lý món ăn đang chọn
+  const [selectedCongThucId, setSelectedCongThucId] = useState(id || "");
+  const [danhSachCongThuc, setDanhSachCongThuc] = useState([]); // List để chọn
+  const [congThucInfo, setCongThucInfo] = useState(null); // Thông tin món đang chọn
 
-  const fileInputRef = useRef(null); // Để reset input file khi cancel
+  // State dữ liệu bước nấu
+  const [buocNaus, setBuocNaus] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const token = localStorage.getItem("token");
-  const API_URL = "http://localhost:8000/api/user/buoc-nau"; // Có thể đổi thành /api nếu proxy
+  // State cho Modal thêm/sửa
+  const [showModal, setShowModal] = useState(false);
+  const [editingStep, setEditingStep] = useState(null); // object bước đang sửa (có ma_buoc_nau)
+  const [formData, setFormData] = useState({
+    so_thu_tu: "",
+    mo_ta: "",
+    thoi_gian: "",
+  });
+  const [imageFile, setImageFile] = useState(null);
 
-  // Lấy danh sách bước nấu
-  const fetchSteps = async () => {
+  // --- 1. KHI MỚI VÀO TRANG ---
+  useEffect(() => {
+    // Nếu KHÔNG có ID trên URL -> Tải danh sách công thức để người dùng chọn
+    if (!id) {
+      loadAllCongThuc();
+    } else {
+      // Nếu CÓ ID -> Set luôn ID đó để tải bước nấu
+      setSelectedCongThucId(id);
+    }
+  }, [id]);
+
+  // --- 2. KHI ID MÓN ĂN THAY ĐỔI (Do chọn dropdown hoặc do URL) ---
+  useEffect(() => {
+    if (selectedCongThucId) {
+      loadDataBuocNau(selectedCongThucId);
+      loadThongTinMonAn(selectedCongThucId);
+    } else {
+      setBuocNaus([]); // Nếu chưa chọn gì thì xóa bảng
+      setCongThucInfo(null);
+    }
+  }, [selectedCongThucId]);
+
+  // --- CÁC HÀM API ---
+  const loadAllCongThuc = async () => {
+    try {
+      const data = await getAllCongThuc();
+      setDanhSachCongThuc(data);
+    } catch (error) {
+      console.error("Lỗi tải danh sách món:", error);
+    }
+  };
+
+  const loadThongTinMonAn = async (maCongThuc) => {
+    try {
+      const data = await getCongThucById(maCongThuc);
+      setCongThucInfo(data);
+    } catch (error) {
+      console.error("Lỗi tải thông tin món:", error);
+    }
+  };
+
+  const loadDataBuocNau = async (maCongThuc) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/cong-thuc/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setSteps(response.data);
+      const data = await getBuocNauByCongThuc(maCongThuc);
+      // Nếu API trả res.data.data thì sửa tương ứng; hiện giả định trả mảng
+      setBuocNaus(Array.isArray(data) ? data : data.data ?? []);
     } catch (error) {
-      console.error("Lỗi tải bước nấu:", error);
-      alert("Không thể tải danh sách bước nấu. Vui lòng kiểm tra kết nối!");
+      console.error("Lỗi load bước nấu:", error);
+      setBuocNaus([]);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (id) fetchSteps();
-  }, [id]);
-
-  // Preview ảnh khi chọn file mới
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setHinhAnh(file);
-      setPreviewAnh(URL.createObjectURL(file));
-    }
+  // --- Modal helpers ---
+  const openAddModal = () => {
+    // gợi ý bước tiếp theo
+    const maxStep = buocNaus.length
+      ? Math.max(...buocNaus.map((b) => Number(b.so_thu_tu) || 0))
+      : 0;
+    setEditingStep(null);
+    setFormData({
+      so_thu_tu: String(maxStep + 1),
+      mo_ta: "",
+      thoi_gian: "",
+    });
+    setImageFile(null);
+    setShowModal(true);
   };
 
-  // Submit form (thêm hoặc sửa)
+  const openEditModal = (item) => {
+    setEditingStep(item);
+    setFormData({
+      so_thu_tu: String(item.so_thu_tu ?? item.so_thu_tu),
+      mo_ta: item.noi_dung ?? item.mo_ta ?? "",
+      thoi_gian: item.thoi_gian ?? "",
+    });
+    setImageFile(null);
+    setShowModal(true);
+  };
+
+  // --- XỬ LÝ FORM ---
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!soThuTu || !noiDung) return alert("Vui lòng nhập đủ số thứ tự và mô tả!");
-
-    const formData = new FormData();
-    formData.append("so_thu_tu", soThuTu);
-    formData.append("noi_dung", noiDung);
-    if (hinhAnh) formData.append("hinh_anh", hinhAnh);
-
-    if (editingId) {
-      formData.append("_method", "PUT"); // Spoof PUT cho Laravel
-    } else {
-      formData.append("ma_cong_thuc", id);
+    if (!selectedCongThucId) {
+      alert("Vui lòng chọn món ăn trước!");
+      return;
     }
 
+    // validation cơ bản
+    if (!formData.so_thu_tu || !formData.mo_ta) {
+      alert("Vui lòng nhập bước số và mô tả.");
+      return;
+    }
+
+    const submitData = new FormData();
+    submitData.append("ma_cong_thuc", selectedCongThucId);
+    // Gửi theo tên cột DB / backend: so_thu_tu, noi_dung, thoi_gian
+    submitData.append("so_thu_tu", formData.so_thu_tu);
+    submitData.append("noi_dung", formData.mo_ta);
+    submitData.append("thoi_gian", formData.thoi_gian);
+    if (imageFile) submitData.append("hinh_anh", imageFile);
+
     try {
-      const url = editingId ? `${API_URL}/${editingId}` : API_URL;
-
-      await axios.post(url, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      alert(editingId ? "Cập nhật bước nấu thành công!" : "Thêm bước nấu thành công!");
-
-      // Reset form
-      setSoThuTu("");
-      setNoiDung("");
-      setHinhAnh(null);
-      setPreviewAnh("");
-      setEditingId(null);
-      if (fileInputRef.current) fileInputRef.current.value = ""; // Reset input file
-      fetchSteps();
-    } catch (error) {
-      console.error("Lỗi khi lưu:", error);
-      if (error.response?.status === 422) {
-        // Hiển thị lỗi validation từ Laravel
-        const errors = error.response.data.errors;
-        alert("Dữ liệu không hợp lệ:\n" + Object.values(errors).flat().join("\n"));
+      if (editingStep && editingStep.ma_buoc_nau) {
+        await updateBuocNau(editingStep.ma_buoc_nau, submitData);
+        alert("Cập nhật thành công!");
       } else {
-        alert("Không thể lưu bước nấu. Vui lòng thử lại!");
+        await createBuocNau(submitData);
+        alert("Thêm mới thành công!");
       }
+      setShowModal(false);
+      setFormData({ so_thu_tu: "", mo_ta: "", thoi_gian: "" });
+      setImageFile(null);
+      loadDataBuocNau(selectedCongThucId);
+    } catch (error) {
+      console.error("Lỗi lưu:", error.response?.data ?? error.message);
+      alert(
+        error.response?.data?.message ||
+          "Có lỗi xảy ra khi lưu bước nấu (xem console để biết chi tiết)"
+      );
     }
   };
 
-  // Click sửa → điền form + preview ảnh cũ (qua proxy /storage)
-  const handleEdit = (step) => {
-    setSoThuTu(step.so_thu_tu);
-    setNoiDung(step.noi_dung);
-    setPreviewAnh(step.hinh_anh ? `/storage/${step.hinh_anh}` : "");
-    setHinhAnh(null);
-    setEditingId(step.ma_buoc_nau);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  // Hủy sửa
-  const handleCancel = () => {
-    setSoThuTu("");
-    setNoiDung("");
-    setHinhAnh(null);
-    setPreviewAnh("");
-    setEditingId(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
-  // Xóa bước
-  const handleDelete = async (stepId) => {
-    if (!window.confirm("Bạn có chắc chắn xóa bước nấu này?")) return;
+  const handleDelete = async (ma_buoc_nau) => {
+    if (!window.confirm("Xóa bước này?")) return;
     try {
-      await axios.delete(`${API_URL}/${stepId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      alert("Xóa thành công!");
-      fetchSteps();
+      await deleteBuocNau(ma_buoc_nau);
+      loadDataBuocNau(selectedCongThucId);
     } catch (error) {
-      console.error("Lỗi xóa:", error);
-      alert("Không thể xóa bước nấu!");
+      console.error("Lỗi xóa:", error.response?.data ?? error.message);
+      alert("Lỗi khi xóa (xem console)");
     }
   };
 
   return (
-    <div className="container mt-5 mb-5">
-      <h2 className="text-primary fw-bold mb-4 text-center">Quản Lý Bước Nấu Công Thức</h2>
+    <div className="container mt-4">
+      <div className="card shadow-sm">
+        <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 className="mb-0">Quản lý bước nấu</h4>
 
-      <div className="row g-4">
-        {/* Form thêm/sửa - bên trái */}
-        <div className="col-lg-5">
-          <div className="card shadow-lg border-0">
-            <div className="card-header bg-gradient bg-primary text-white">
-              <h5 className="mb-0">
-                <i className="bi bi-pencil-square me-2"></i>
-                {editingId ? "Sửa Bước Nấu" : "Thêm Bước Nấu Mới"}
-              </h5>
-            </div>
-            <div className="card-body">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label className="form-label fw-bold">Bước số:</label>
-                  <input
-                    type="number"
-                    min="1"
-                    className="form-control"
-                    value={soThuTu}
-                    onChange={(e) => setSoThuTu(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold">Mô tả thực hiện:</label>
-                  <textarea
-                    className="form-control"
-                    rows="5"
-                    value={noiDung}
-                    onChange={(e) => setNoiDung(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold">Ảnh minh họa (tùy chọn):</label>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="form-control"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                  />
-                  {previewAnh && (
-                    <div className="mt-3 text-center">
-                      <img
-                        src={previewAnh}
-                        alt="Preview ảnh bước nấu"
-                        className="img-fluid rounded shadow"
-                        style={{ maxHeight: "350px" }}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <button type="submit" className="btn btn-primary btn-lg me-md-2">
-                    <i className="bi bi-save me-2"></i>
-                    {editingId ? "Cập Nhật" : "Lưu Bước"}
-                  </button>
-                  {editingId && (
-                    <button type="button" className="btn btn-secondary btn-lg" onClick={handleCancel}>
-                      <i className="bi bi-x-circle me-2"></i>Hủy
-                    </button>
-                  )}
-                </div>
-              </form>
-            </div>
-          </div>
+          {/* Chỉ hiện nút Thêm khi ĐÃ CHỌN món ăn */}
+          {selectedCongThucId && (
+            <button
+              className="btn btn-light text-primary fw-bold"
+              onClick={() => openAddModal()}
+            >
+              <i className="bi bi-plus-circle me-1"></i> Thêm bước
+            </button>
+          )}
         </div>
 
-        {/* Danh sách bước - bên phải */}
-        <div className="col-lg-7">
-          <h4 className="fw-bold text-secondary mb-3">Danh Sách Các Bước Hiện Có</h4>
+        <div className="card-body">
+          {/* --- PHẦN 1: Ô CHỌN MÓN ĂN (Chỉ hiện nếu không có ID trên URL hoặc user muốn đổi) --- */}
+          {!id && (
+            <div className="mb-4 p-3 bg-light rounded border">
+              <label className="form-label fw-bold">
+                Chọn món ăn để quản lý bước nấu:
+              </label>
+              <select
+                className="form-select"
+                value={selectedCongThucId}
+                onChange={(e) => setSelectedCongThucId(e.target.value)}
+              >
+                <option value="">-- Vui lòng chọn món ăn --</option>
+                {danhSachCongThuc.map((ct) => (
+                  <option
+                    key={ct.ma_cong_thuc ?? ct.id}
+                    value={ct.ma_cong_thuc ?? ct.id}
+                  >
+                    {ct.ten_cong_thuc}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          {loading ? (
-            <div className="text-center py-5">
-              <div className="spinner-border text-primary" style={{ width: "4rem", height: "4rem" }}></div>
-              <p className="mt-3 text-muted">Đang tải bước nấu...</p>
+          {/* --- HIỂN THỊ TÊN MÓN ĐANG CHỌN --- */}
+          {congThucInfo && (
+            <div className="alert alert-info">
+              Đang xem bước nấu cho món: <strong>{congThucInfo.ten_cong_thuc}</strong>
+              <button
+                className="btn btn-sm btn-outline-secondary ms-3"
+                onClick={() => navigate(`/user/quanlicongthuc`)}
+              >
+                Quay lại quản lý công thức
+              </button>
             </div>
-          ) : steps.length === 0 ? (
-            <div className="alert alert-info text-center py-5">
-              <i className="bi bi-info-circle display-4"></i>
-              <h5 className="mt-3">Chưa có bước nấu nào</h5>
-              <p>Hãy thêm bước đầu tiên để hoàn thiện công thức!</p>
+          )}
+
+          {/* --- PHẦN 2: DANH SÁCH BƯỚC NẤU --- */}
+          {!selectedCongThucId ? (
+            <p className="text-center text-muted py-5">
+              Vui lòng chọn món ăn để xem dữ liệu.
+            </p>
+          ) : loading ? (
+            <div className="text-center py-4">
+              <div className="spinner-border text-primary" />
             </div>
+          ) : buocNaus.length === 0 ? (
+            <p className="text-center text-muted py-4">Chưa có bước nấu nào. Hãy thêm mới!</p>
           ) : (
-            <div className="list-group gap-3">
-              {steps.map((step) => (
-                <div
-                  key={step.ma_buoc_nau}
-                  className="list-group-item shadow-sm rounded p-4 border"
-                >
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div className="flex-grow-1 me-3">
-                      <h5 className="text-primary fw-bold">
-                        <i className="bi bi-1-circle me-2"></i>Bước {step.so_thu_tu}
-                      </h5>
-                      <p className="mb-3" style={{ whiteSpace: "pre-line", fontSize: "1.1rem" }}>
-                        {step.noi_dung}
-                      </p>
-                      {step.hinh_anh && (
-                        <img
-                          src={`/storage/${step.hinh_anh}`}
-                          alt={`Ảnh bước ${step.so_thu_tu}`}
-                          className="img-fluid rounded shadow"
-                          style={{ maxHeight: "450px" }}
-                        />
-                      )}
-                    </div>
-
-                    <div className="d-flex flex-column gap-2">
-                      <button
-                        className="btn btn-outline-warning btn-sm"
-                        onClick={() => handleEdit(step)}
-                      >
-                        <i className="bi bi-pencil"></i> Sửa
-                      </button>
-                      <button
-                        className="btn btn-outline-danger btn-sm"
-                        onClick={() => handleDelete(step.ma_buoc_nau)}
-                      >
-                        <i className="bi bi-trash"></i> Xóa
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="table-responsive">
+              <table className="table table-bordered table-hover align-middle">
+                <thead className="table-secondary text-center">
+                  <tr>
+                    <th>Bước số</th>
+                    <th>Hình ảnh</th>
+                    <th>Mô tả</th>
+                    <th>Thời gian</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {buocNaus.map((item) => (
+                    <tr key={item.ma_buoc_nau}>
+                      <td className="text-center fw-bold">{item.so_thu_tu}</td>
+                      <td className="text-center">
+                        {item.hinh_anh ? (
+                          <img
+                            src={`http://localhost:8000/storage/${item.hinh_anh}`}
+                            alt=""
+                            width="80"
+                            className="rounded"
+                          />
+                        ) : (
+                          "Không ảnh"
+                        )}
+                      </td>
+                      <td>{item.noi_dung}</td>
+                      <td className="text-center">{item.thoi_gian} phút</td>
+                      <td className="text-center">
+                        <button
+                          className="btn btn-sm btn-outline-info me-2"
+                          onClick={() => openEditModal(item)}
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleDelete(item.ma_buoc_nau)}
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
       </div>
+
+      {/* --- MODAL POPUP --- */}
+      {showModal && (
+        <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">{editingStep ? "Sửa bước nấu" : "Thêm bước nấu mới"}</h5>
+                <button className="btn-close" onClick={() => setShowModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label className="form-label">Bước số</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      required
+                      min={1}
+                      value={formData.so_thu_tu}
+                      onChange={(e) => setFormData({ ...formData, so_thu_tu: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Mô tả bước làm</label>
+                    <textarea
+                      className="form-control"
+                      rows="3"
+                      required
+                      value={formData.mo_ta}
+                      onChange={(e) => setFormData({ ...formData, mo_ta: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Thời gian (phút)</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={formData.thoi_gian}
+                      onChange={(e) => setFormData({ ...formData, thoi_gian: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Hình ảnh minh họa</label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      accept="image/*"
+                      onChange={(e) => setImageFile(e.target.files[0])}
+                    />
+                  </div>
+
+                  <div className="text-end">
+                    <button type="button" className="btn btn-secondary me-2" onClick={() => setShowModal(false)}>
+                      Hủy
+                    </button>
+                    <button type="submit" className="btn btn-primary">Lưu lại</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

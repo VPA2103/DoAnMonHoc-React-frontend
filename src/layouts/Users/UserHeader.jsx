@@ -120,6 +120,21 @@ const UserHeader = ({ user }) => {
                 >
                   🗨️ Quản lý bình luận
                 </Link>
+
+                 <Link
+                    to="/user/quan-ly/danh-gia"
+                    className="d-block px-3 py-2 text-white text-decoration-none"
+                    onClick={() => setShowMenu(false)}
+                    style={{ cursor: "pointer" }}
+                    onMouseOver={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#2F2F2F")
+                    }
+                    onMouseOut={(e) =>
+                      (e.currentTarget.style.backgroundColor = "transparent")
+                    }
+                  >
+                    ⭐ Quản lý đánh giá
+                  </Link>
               </div>
             )}
           </div>

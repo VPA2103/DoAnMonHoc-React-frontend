@@ -142,14 +142,14 @@ function CongThucList() {
                       </td>
                       <td className="text-center">
                         <div className="d-flex justify-content-center gap-2">
-                          <Link
-                              to={`/user/xem-cong-thuc/${ct.ma_cong_thuc}`}
-                              className="btn btn-sm btn-outline-info"
-                              title="Xem chi tiết"
-                            >
-                              <i className="bi bi-eye-fill me-1"></i>
-                              Xem
-                            </Link>
+                        <Link
+                        to={`/user/quanlicongthuc/buoc-nau/${ct.ma_cong_thuc || ct.id}`}
+                          className="btn btn-sm btn-outline-primary"
+                          title="Quản lý bước nấu"
+                        >
+                          <i className="bi bi-list-ol me-1"></i>
+                          Bước nấu
+                        </Link>
                           <Link
                             to={`/user/quanlicongthuc/sua/${ct.ma_cong_thuc}`}
                             className="btn btn-sm btn-outline-warning"

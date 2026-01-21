@@ -7,7 +7,11 @@ const API = "http://localhost:8000/api";
 const RecipeDetailPage = () => {
   const { id } = useParams();
 
-  // ===== CHI TIẾT CÔNG THỨC =====
+  // ===== AUTH =====
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // ===== CHI TIẾT =====
   const [recipe, setRecipe] = useState(null);
 
   // ===== BÌNH LUẬN =====
@@ -15,191 +19,230 @@ const RecipeDetailPage = () => {
   const [noiDung, setNoiDung] = useState("");
   const [editId, setEditId] = useState(null);
 
-  // ⚠️ FIX CHỖ NÀY – KEY PHẢI ĐÚNG
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  // ===== ĐÁNH GIÁ =====
+  const [avgStar, setAvgStar] = useState(0);
+  const [totalRating, setTotalRating] = useState(0);
+  const [star, setStar] = useState(0);
+  const [ratingId, setRatingId] = useState(null);
 
   useEffect(() => {
     fetchDetail();
     fetchBinhLuan();
+    fetchThongKe();
+    if (token) fetchMyRating();
   }, [id]);
 
   // ===== LOAD CHI TIẾT =====
   const fetchDetail = async () => {
-    try {
-      const res = await axios.get(`${API}/cong-thucc/${id}`);
-      setRecipe(res.data.data);
-    } catch (error) {
-      console.error("Lỗi load chi tiết:", error);
-    }
+    const res = await axios.get(`${API}/cong-thucc/${id}`);
+    setRecipe(res.data.data);
   };
 
   // ===== LOAD BÌNH LUẬN =====
   const fetchBinhLuan = async () => {
-    try {
-      const res = await axios.get(`${API}/binh-luan/cong-thuc/${id}`);
-      setBinhLuans(res.data.data);
-    } catch (error) {
-      console.error("Lỗi load bình luận:", error);
+    const res = await axios.get(`${API}/binh-luan/cong-thuc/${id}`);
+    setBinhLuans(res.data.data);
+  };
+
+  // ===== THỐNG KÊ SAO =====
+  const fetchThongKe = async () => {
+    const res = await axios.get(`${API}/danh-gia/thong-ke/${id}`);
+    setAvgStar(res.data.avg_star || 0);
+    setTotalRating(res.data.total || 0);
+  };
+
+  // ===== ĐÁNH GIÁ CỦA TÔI =====
+  const fetchMyRating = async () => {
+    const res = await axios.get(`${API}/user/danh-gia`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const found = res.data.data.find((r) => r.ma_cong_thuc == id);
+    if (found) {
+      setStar(found.so_sao);
+      setRatingId(found.id);
     }
   };
 
-  // ===== THÊM / SỬA =====
-  const handleSubmitBinhLuan = async () => {
-    if (!noiDung.trim()) return;
-
+  // ===== GỬI / SỬA ĐÁNH GIÁ =====
+  const submitRating = async () => {
     try {
-      if (editId) {
+      if (ratingId) {
         await axios.put(
-          `${API}/user/binh-luan/${editId}`,
-          { noi_dung: noiDung },
+          `${API}/danh-gia/${ratingId}`,
+          { so_sao: star },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        setEditId(null);
       } else {
         await axios.post(
-          `${API}/user/binh-luan`,
-          { ma_cong_thuc: id, noi_dung: noiDung },
+          `${API}/danh-gia`,
+          { ma_cong_thuc: id, so_sao: star },
           { headers: { Authorization: `Bearer ${token}` } }
         );
       }
 
-      setNoiDung("");
-      fetchBinhLuan();
-    } catch (error) {
-      console.error("Lỗi gửi bình luận:", error.response?.data || error);
+      fetchThongKe();
+      fetchMyRating();
+      alert("⭐ Đánh giá thành công");
+    } catch (err) {
+      alert(err.response?.data?.message || "Lỗi đánh giá");
     }
   };
 
-  // ===== SỬA =====
-  const handleEdit = (bl) => {
-    setEditId(bl.ma_binh_luan);
-    setNoiDung(bl.noi_dung);
+  // ===== GỬI / SỬA BÌNH LUẬN =====
+  const handleSubmitBinhLuan = async () => {
+    if (!noiDung.trim()) return;
+
+    if (editId) {
+      await axios.put(
+        `${API}/user/binh-luan/${editId}`,
+        { noi_dung: noiDung },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setEditId(null);
+    } else {
+      await axios.post(
+        `${API}/user/binh-luan`,
+        { ma_cong_thuc: id, noi_dung: noiDung },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    }
+
+    setNoiDung("");
+    fetchBinhLuan();
   };
 
-  // ===== XÓA =====
-  const handleDelete = async (idBinhLuan) => {
+  // ===== XÓA BÌNH LUẬN =====
+  const handleDelete = async (blId) => {
     if (!window.confirm("Xóa bình luận này?")) return;
 
-    try {
-      await axios.delete(`${API}/user/binh-luan/${idBinhLuan}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchBinhLuan();
-    } catch (error) {
-      console.error("Lỗi xóa bình luận:", error);
-    }
+    await axios.delete(`${API}/user/binh-luan/${blId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    fetchBinhLuan();
   };
 
-  if (!recipe) return <p style={{ textAlign: "center" }}>Đang tải...</p>;
+  if (!recipe) return <p>Đang tải...</p>;
 
   return (
     <div style={{ maxWidth: 900, margin: "40px auto", padding: 20 }}>
-      {/* ===== TÊN ===== */}
-      <h1 style={{ textAlign: "center", marginBottom: 20 }}>
-        {recipe.ten_cong_thuc}
-      </h1>
+      <h1 style={{ textAlign: "center" }}>{recipe.ten_cong_thuc}</h1>
 
-      {/* ===== ẢNH ĐẸP ===== */}
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 30 }}>
-        <div
-          style={{
-            width: 360,
-            height: 360,
-            borderRadius: 16,
-            overflow: "hidden",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-          }}
-        >
-          <img
-            src={`http://localhost:8000/storage/${recipe.anh_cong_thuc}`}
-            alt={recipe.ten_cong_thuc}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </div>
-      </div>
+      {/* ===== ẢNH ===== */}
+      <img
+        src={`http://localhost:8000/storage/${recipe.anh_cong_thuc}`}
+        alt=""
+        style={{
+          width: 350,
+          height: 350,
+          objectFit: "cover",
+          borderRadius: 12,
+          display: "block",
+          margin: "20px auto",
+        }}
+      />
 
       {/* ===== THÔNG TIN ===== */}
       <p>{recipe.mo_ta}</p>
-      <p><strong>Độ khó:</strong> {recipe.do_kho}</p>
-      <p><strong>Thời gian:</strong> {recipe.thoi_gian_nau} phút</p>
-      <p><strong>Danh mục:</strong> {recipe.danh_muc?.ten_danh_muc}</p>
-      <p><strong>Tác giả:</strong> {recipe.tac_gia?.ten_nguoi_dung}</p>
+      <p><b>Độ khó:</b> {recipe.do_kho}</p>
+      <p><b>Thời gian:</b> {recipe.thoi_gian_nau} phút</p>
+      <p><b>Tác giả:</b> {recipe.tac_gia?.ten_nguoi_dung}</p>
 
+      {/* ===== ĐÁNH GIÁ ===== */}
       <hr />
+      <h3 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        ⭐ Đánh giá
+      </h3>
 
-      {/* ===== NGUYÊN LIỆU ===== */}
-      <h3>🧂 Nguyên liệu</h3>
-      <ul>
-        {recipe.nguyen_lieu?.map((nl, i) => (
-          <li key={i}>
-            {nl.ten_nguyen_lieu} – {nl.so_luong}
-          </li>
-        ))}
-      </ul>
+      <p style={{ color: "#555" }}>
+        Trung bình: <b>{avgStar}</b> ⭐ ({totalRating} lượt)
+      </p>
 
-      {/* ===== CÁC BƯỚC ===== */}
-      <h3>🍳 Các bước nấu</h3>
-      <ol>
-        {recipe.buoc_nau?.map((b, i) => (
-          <li key={i}>{b.noi_dung}</li>
-        ))}
-      </ol>
+      {token ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {/* SAO */}
+          <div style={{ display: "flex", gap: 6 }}>
+            {[1, 2, 3, 4, 5].map((s) => (
+              <span
+                key={s}
+                onClick={() => setStar(s)}
+                onMouseEnter={() => setStar(s)}
+                style={{
+                  fontSize: 34,
+                  cursor: "pointer",
+                  transition: "0.2s",
+                  color: s <= star ? "#f5b301" : "#ddd",
+                }}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+
+          {/* BUTTON */}
+          <button
+            onClick={submitRating}
+            style={{
+              padding: "8px 16px",
+              borderRadius: 20,
+              border: "none",
+              background: "#f5b301",
+              color: "#fff",
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "0.2s",
+            }}
+            onMouseOver={(e) => (e.target.style.background = "#e0a800")}
+            onMouseOut={(e) => (e.target.style.background = "#f5b301")}
+          >
+            Gửi đánh giá
+          </button>
+        </div>
+      ) : (
+        <p style={{ color: "#999" }}>🔒 Đăng nhập để đánh giá</p>
+      )}
 
       {/* ===== BÌNH LUẬN ===== */}
       <hr />
       <h3>💬 Bình luận</h3>
 
-      {binhLuans.length === 0 && <p>Chưa có bình luận nào.</p>}
-
       {binhLuans.map((bl) => (
-        <div
-          key={bl.ma_binh_luan}
-          style={{
-            borderBottom: "1px solid #eee",
-            padding: "12px 0",
-          }}
-        >
-          <strong>{bl.nguoi_dung?.ten_nguoi_dung}</strong>
-          <p style={{ margin: "6px 0" }}>{bl.noi_dung}</p>
-          <small>
-            {new Date(bl.created_at).toLocaleString("vi-VN")}
-          </small>
+        <div key={bl.ma_binh_luan} style={{ borderBottom: "1px solid #eee", paddingBottom: 8 }}>
+          <b>{bl.nguoi_dung?.ten_nguoi_dung}</b>
+          <p>{bl.noi_dung}</p>
 
           {user?.ma_nguoi_dung === bl.ma_nguoi_dung && (
-            <div style={{ marginTop: 6 }}>
-              <button onClick={() => handleEdit(bl)}>✏️ Sửa</button>
+            <>
               <button
-                onClick={() => handleDelete(bl.ma_binh_luan)}
-                style={{ marginLeft: 10 }}
+                onClick={() => {
+                  setEditId(bl.ma_binh_luan);
+                  setNoiDung(bl.noi_dung);
+                }}
               >
-                🗑️ Xóa
+                ✏️
               </button>
-            </div>
+
+              <button onClick={() => handleDelete(bl.ma_binh_luan)}>
+                🗑️
+              </button>
+            </>
           )}
         </div>
       ))}
 
-      {/* ===== FORM ===== */}
-      {token ? (
-        <div style={{ marginTop: 20 }}>
+      {token && (
+        <div style={{ marginTop: 10 }}>
           <textarea
             rows="3"
             value={noiDung}
             onChange={(e) => setNoiDung(e.target.value)}
             placeholder="Viết bình luận..."
-            style={{ width: "100%", padding: 10 }}
+            style={{ width: "100%" }}
           />
-          <button onClick={handleSubmitBinhLuan} style={{ marginTop: 10 }}>
-            {editId ? "💾 Cập nhật" : "➕ Gửi bình luận"}
+          <button onClick={handleSubmitBinhLuan}>
+            {editId ? "Cập nhật" : "Gửi"}
           </button>
         </div>
-      ) : (
-        <p>🔒 Đăng nhập để bình luận</p>
       )}
     </div>
   );

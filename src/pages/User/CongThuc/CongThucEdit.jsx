@@ -3,7 +3,7 @@ import { getCongThucById, updateCongThuc } from "../../../services/CongThucServi
 import { useNavigate, useParams } from "react-router-dom";
 import { getDanhMucs } from "../../../services/CongThucService";
 //them import quan li buoc nau
-import RecipeEditMenu from '../../../components/RecipeEditMenu';
+// import RecipeEditMenu from '../../../components/RecipeEditMenu';
 function CongThucEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ function CongThucEdit() {
   return (
     <div className="container mt-4">
       {/* them quan li buoc nau */}
-     <RecipeEditMenu id={id} />
+     {/* <RecipeEditMenu id={id} /> */}
       <div className="card shadow">
         <div className="card-header bg-primary text-white">
           <h5 className="mb-0">✏️ Sửa công thức</h5>
