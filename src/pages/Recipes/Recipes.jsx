@@ -122,9 +122,13 @@ const Recipes = () => {
                     padding: "4px 6px",
                   }}
                 >
-                  {Number(recipe.is_favorite) === 1 || recipe.is_favorite === true
-                    ? "❤️"
-                    : "🤍"}
+                  <i
+                    className={
+                      Number(recipe.is_favorite) === 1 || recipe.is_favorite === true
+                        ? "bi bi-heart-fill text-danger"
+                        : "bi bi-heart"
+                    }
+                  ></i>
                 </span>
               </div>
 
