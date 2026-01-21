@@ -27,6 +27,7 @@ import AdminEditUser from "../pages/Admin/AdminUser/AdminEditUser";
 import QuanLiDanhMuc from "../pages/Admin/QuanLiDanhMuc";
 import QuanLyNguyenLieu from "../pages/Admin/QuanLyNguyenLieu/QuanLyNguyenLieu";
 import QuanLyLienHe from "../pages/Admin/QuanLyLienHe/QuanLyLienHe";
+import AdminBlog from "../pages/Admin/AdminBlog";
 
 /* ===== USER ===== */
 import DanhSachTheoDoi from "../pages/User/DanhSachTheoDoi/DanhSachTheoDoi";
@@ -93,6 +94,8 @@ const AppRoutes = () => {
           <Route path="recipes" element={<Recipes />} />
           <Route path="categories" element={<Categories />} />
           <Route path="kehoachbuaan" element={<Categories />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="quanliblog" element={<AdminBlog />} />
           {/* <Route path="categories" element={<Categories />} /> */}
 
 

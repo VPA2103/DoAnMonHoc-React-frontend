@@ -1,23 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Container, Badge } from 'react-bootstrap';
+import { Table, Button, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const DanhSachBlog = () => {
-    const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchBlogs();
-    }, []);
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
 
-    const fetchBlogs = async () => {
-        try {
-            const res = await axios.get('http://127.0.0.1:8000/api/blogs');
-            setBlogs(res.data);
-        } catch (error) {
-            console.error("Lỗi tải blog:", error);
+  const fetchBlogs = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Chưa đăng nhập");
+        return;
+      }
+
+      const res = await axios.get(
+        "http://127.0.0.1:8000/api/user/blogs",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    };
+      );
+
+      setBlogs(res.data);
+    } catch (error) {
+      console.error("Lỗi tải blog:", error);
+      alert("Không tải được danh sách blog");
+    } finally {
+      setLoading(false);
+    }
+  };
 
     const handleDelete = async (id) => {
         if (window.confirm('Bạn có chắc muốn xóa bài viết này?')) {
@@ -65,14 +83,14 @@ const DanhSachBlog = () => {
         );
     };
 
-    return (
-        <Container className="mt-4 text-white">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Quản lý Blog</h2>
-                <Link to="/user/blog/them" className="btn btn-primary">
-                    + Thêm bài viết
-                </Link>
-            </div>
+  return (
+    <Container className="mt-4 text-white">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2>Blog của tôi</h2>
+        <Link to="/user/blog/them" className="btn btn-primary">
+          + Thêm bài viết
+        </Link>
+      </div>
 
             <Table striped bordered hover variant="dark" responsive>
                 <thead>
