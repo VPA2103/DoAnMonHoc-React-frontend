@@ -15,37 +15,33 @@ export default function QuanLyNguyenLieuUser() {
   const [nguyenLieuId, setNguyenLieuId] = useState("");
   const [soLuong, setSoLuong] = useState("");
 
+  // 🔥 STATE SỬA
+  const [editingId, setEditingId] = useState(null);
+  const [editingSoLuong, setEditingSoLuong] = useState("");
+
   /* ================= LOAD DỮ LIỆU ================= */
 
-  // Load công thức của user
+  // Load công thức
   useEffect(() => {
     axios
       .get(`${API}/user/cong-thuc`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => {
-        setCongThucList(res.data.data || []);
-      })
-      .catch(() => {
-        toast.error("Không tải được danh sách công thức");
-      });
+      .then((res) => setCongThucList(res.data.data || []))
+      .catch(() => toast.error("Không tải được công thức"));
   }, []);
 
-  // Load nguyên liệu (admin tạo)
+  // Load nguyên liệu
   useEffect(() => {
     axios
       .get(`${API}/user/nguyen-lieu`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => {
-        setNguyenLieuList(res.data.data || []);
-      })
-      .catch(() => {
-        toast.error("Không tải được danh sách nguyên liệu");
-      });
+      .then((res) => setNguyenLieuList(res.data.data || []))
+      .catch(() => toast.error("Không tải được nguyên liệu"));
   }, []);
 
-  // 🔥 Load nguyên liệu theo công thức
+  // Load nguyên liệu theo công thức
   const loadNguyenLieuCongThuc = async () => {
     if (!congThucId) {
       setNguyenLieuDaThem([]);
@@ -55,32 +51,23 @@ export default function QuanLyNguyenLieuUser() {
     try {
       const res = await axios.get(
         `${API}/user/cong-thuc/${congThucId}/nguyen-lieu`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
       setNguyenLieuDaThem(res.data.data || []);
-    } catch (err) {
+    } catch {
       toast.error("Không tải được nguyên liệu của công thức");
     }
   };
 
-  // Khi đổi công thức → load lại nguyên liệu
   useEffect(() => {
     loadNguyenLieuCongThuc();
   }, [congThucId]);
 
-  /* ================= THÊM NGUYÊN LIỆU ================= */
+  /* ================= THÊM ================= */
 
   const handleThem = async () => {
-    if (!congThucId) {
-      toast.warning("Vui lòng chọn công thức");
-      return;
-    }
-
-    if (!nguyenLieuId || !soLuong) {
-      toast.warning("Vui lòng chọn nguyên liệu và nhập số lượng");
+    if (!congThucId || !nguyenLieuId || !soLuong) {
+      toast.warning("Vui lòng nhập đầy đủ");
       return;
     }
 
@@ -92,24 +79,59 @@ export default function QuanLyNguyenLieuUser() {
           ma_nguyen_lieu: Number(nguyenLieuId),
           so_luong: Number(soLuong),
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      toast.success("Thêm nguyên liệu thành công");
-
-      // 🔥 LOAD LẠI NGAY
-      loadNguyenLieuCongThuc();
-
+      toast.success("Thêm thành công");
       setNguyenLieuId("");
       setSoLuong("");
-    } catch (err) {
-      console.error("LỖI:", err.response?.data);
-      toast.error("Thêm nguyên liệu thất bại");
+      loadNguyenLieuCongThuc();
+    } catch {
+      toast.error("Thêm thất bại");
+    }
+  };
+
+  /* ================= SỬA ================= */
+
+  const handleSua = async (maNguyenLieu) => {
+    try {
+      await axios.put(
+        `${API}/user/cong-thuc-nguyen-lieu`,
+        {
+          ma_cong_thuc: Number(congThucId),
+          ma_nguyen_lieu: Number(maNguyenLieu),
+          so_luong: Number(editingSoLuong),
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      toast.success("Cập nhật thành công");
+      setEditingId(null);
+      setEditingSoLuong("");
+      loadNguyenLieuCongThuc();
+    } catch {
+      toast.error("Cập nhật thất bại");
+    }
+  };
+
+  /* ================= XÓA ================= */
+
+  const handleXoa = async (maNguyenLieu) => {
+    if (!window.confirm("Xóa nguyên liệu này?")) return;
+
+    try {
+      await axios.delete(`${API}/user/cong-thuc-nguyen-lieu`, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: {
+          ma_cong_thuc: Number(congThucId),
+          ma_nguyen_lieu: Number(maNguyenLieu),
+        },
+      });
+
+      toast.success("Đã xóa");
+      loadNguyenLieuCongThuc();
+    } catch {
+      toast.error("Xóa thất bại");
     }
   };
 
@@ -117,9 +139,8 @@ export default function QuanLyNguyenLieuUser() {
 
   return (
     <div className="card p-3">
-      <h5 className="mb-3">Quản lý nguyên liệu theo công thức</h5>
+      <h5>Quản lý nguyên liệu theo công thức</h5>
 
-      {/* CHỌN CÔNG THỨC */}
       <select
         className="form-select mb-2"
         value={congThucId}
@@ -133,7 +154,6 @@ export default function QuanLyNguyenLieuUser() {
         ))}
       </select>
 
-      {/* CHỌN NGUYÊN LIỆU */}
       <select
         className="form-select mb-2"
         value={nguyenLieuId}
@@ -148,16 +168,15 @@ export default function QuanLyNguyenLieuUser() {
         ))}
       </select>
 
-      {/* NHẬP SỐ LƯỢNG */}
       <input
         type="number"
-        className="form-control mb-3"
+        className="form-control mb-2"
         placeholder="Số lượng"
         value={soLuong}
         onChange={(e) => setSoLuong(e.target.value)}
-        disabled={!congThucId}
         min="0"
         step="0.01"
+        disabled={!congThucId}
       />
 
       <button
@@ -168,7 +187,6 @@ export default function QuanLyNguyenLieuUser() {
         Thêm nguyên liệu
       </button>
 
-      {/* ===== DANH SÁCH ĐÃ THÊM ===== */}
       <h6>Nguyên liệu đã thêm</h6>
 
       <table className="table table-sm">
@@ -177,12 +195,13 @@ export default function QuanLyNguyenLieuUser() {
             <th>Tên</th>
             <th>Số lượng</th>
             <th>Đơn vị</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
           {nguyenLieuDaThem.length === 0 && (
             <tr>
-              <td colSpan="3" className="text-center">
+              <td colSpan="4" className="text-center">
                 Chưa có nguyên liệu
               </td>
             </tr>
@@ -191,8 +210,60 @@ export default function QuanLyNguyenLieuUser() {
           {nguyenLieuDaThem.map((nl) => (
             <tr key={nl.ma_nguyen_lieu}>
               <td>{nl.ten_nguyen_lieu}</td>
-              <td>{nl.pivot.so_luong}</td>
+
+              <td>
+                {editingId === nl.ma_nguyen_lieu ? (
+                  <input
+                    type="number"
+                    className="form-control form-control-sm"
+                    value={editingSoLuong}
+                    onChange={(e) => setEditingSoLuong(e.target.value)}
+                    min="0"
+                    step="0.01"
+                  />
+                ) : (
+                  nl.pivot.so_luong
+                )}
+              </td>
+
               <td>{nl.don_vi_tinh}</td>
+
+              <td>
+                {editingId === nl.ma_nguyen_lieu ? (
+                  <>
+                    <button
+                      className="btn btn-sm btn-success me-1"
+                      onClick={() => handleSua(nl.ma_nguyen_lieu)}
+                    >
+                      Lưu
+                    </button>
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => setEditingId(null)}
+                    >
+                      Hủy
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="btn btn-sm btn-warning me-1"
+                      onClick={() => {
+                        setEditingId(nl.ma_nguyen_lieu);
+                        setEditingSoLuong(nl.pivot.so_luong);
+                      }}
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() => handleXoa(nl.ma_nguyen_lieu)}
+                    >
+                      Xóa
+                    </button>
+                  </>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

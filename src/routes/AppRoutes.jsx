@@ -52,6 +52,10 @@ import BlogListPage from "../pages/User/QuanLyBlog/BlogListPage";
 import TaoCongThuc from '../pages/User/NguyenLieu/TaoCongThuc';
 // import QuanLyDanhGia from "../pages/User/QuanLyDanhGia/QuanLyDanhGia";
 import QuanLyBuocNau from '../pages/User/QuanLyBuocNau/QuanLyBuocNau';
+import QuanLyCauHoi from "../pages/User/QuanLyCauHoi/QuanLyCauHoi";
+import QuanLyCauHoiVaTraLoi from "../pages/Admin/QuanLyCauHoiVaTraLoi/QuanLyCauHoiVaTraLoi";
+import QuanLyDanhGia from "../pages/User/QuanLyDanhGia/QuanLyDanhGia";
+import QuanLyToCao from "../pages/Admin/QuanLyToCao/QuanLyToCao";
 import QuanLyNguyenLieuUser from "../pages/User/NguyenLieu/QuanLyNguyenLieuUser";
 const AppRoutes = () => {
   return (
@@ -98,6 +102,8 @@ const AppRoutes = () => {
           <Route path="kehoachbuaan" element={<Categories />} />
           <Route path="categories" element={<Categories />} />
           <Route path="quanliblog" element={<AdminBlog />} />
+          <Route path="quanlitocao" element={<QuanLyToCao />} />
+          <Route path="quanlycauhoivatraloi" element={<QuanLyCauHoiVaTraLoi />} />
           {/* <Route path="categories" element={<Categories />} /> */}
 
 
@@ -137,6 +143,9 @@ const AppRoutes = () => {
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
           <Route path="quanlibuocnau" element={<QuanLyBuocNau />} />
           <Route path="favorites" element={<QuanLyYeuThich />} />
+          <Route path="quan-ly/danh-gia" element={<QuanLyDanhGia />} />
+          <Route path="quanlicauhoi" element={<QuanLyCauHoi />} />
+          
         </Route>
       </Route>
     </Routes>
