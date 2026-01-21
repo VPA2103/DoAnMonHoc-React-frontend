@@ -54,6 +54,7 @@ import QuanLyBuocNau from '../pages/User/QuanLyBuocNau/QuanLyBuocNau';
 import QuanLyCauHoi from "../pages/User/QuanLyCauHoi/QuanLyCauHoi";
 import QuanLyCauHoiVaTraLoi from "../pages/Admin/QuanLyCauHoiVaTraLoi/QuanLyCauHoiVaTraLoi";
 import QuanLyDanhGia from "../pages/User/QuanLyDanhGia/QuanLyDanhGia";
+import QuanLyToCao from "../pages/Admin/QuanLyToCao/QuanLyToCao";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -99,6 +100,7 @@ const AppRoutes = () => {
           <Route path="kehoachbuaan" element={<Categories />} />
           <Route path="categories" element={<Categories />} />
           <Route path="quanliblog" element={<AdminBlog />} />
+          <Route path="quanlitocao" element={<QuanLyToCao />} />
           <Route path="quanlycauhoivatraloi" element={<QuanLyCauHoiVaTraLoi />} />
           {/* <Route path="categories" element={<Categories />} /> */}
 
