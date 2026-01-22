@@ -78,7 +78,7 @@ function CongThucList() {
                     <th style={{ width: "20%" }}>Thao tác</th>
                   </tr>
                 </thead>
-                <tbody className="text-center">
+                <tbody className="text-center"> 
                   {congThucs.map((ct) => (
                     <tr key={ct.ma_cong_thuc}>
                       <td className="text-center">{ct.ma_cong_thuc}</td>
