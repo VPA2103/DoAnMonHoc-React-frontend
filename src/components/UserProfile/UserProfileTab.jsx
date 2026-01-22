@@ -79,6 +79,14 @@ export default function UserProfileTab() {
           Quản lý bước nấu
         </NavLink>
       </li>
+      <li className="nav-item">
+        <NavLink
+          to="/user/quanlicauhoi"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
+        >
+          Quản lý Câu Hỏi
+        </NavLink>
+      </li>
     </ul>
   );
 }
