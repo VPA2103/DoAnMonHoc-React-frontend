@@ -1,78 +1,162 @@
 import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import { getFollowingUsers } from "../../../services/userService";
-import { useOutletContext } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function DanhSachTheoDoi() {
-
-const [following, setFollowing] = useState([]);
+  const [followers, setFollowers] = useState([]);
   const [loading, setLoading] = useState(true);
-   const { setUser } = useOutletContext();
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchFollowing = async () => {
-      try {
-        const res = await getFollowingUsers();
-        setFollowing(res.data); // hoặc res.data.data tùy API
-      } catch (error) {
-        console.error("Lỗi lấy danh sách đang theo dõi:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFollowing();
+    fetchFollowers();
   }, []);
-const handleUnfollow = async (userId) => {
-    await axios.delete(`http://127.0.0.1:8000/api/unfollow/${userId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
 
-    setFollowing(prev =>
-      prev.filter(u => u.ma_nguoi_dung !== userId)
-    );
+  // ===============================
+  // LẤY DANH SÁCH NGƯỜI THEO DÕI MÌNH
+  // ===============================
+  const fetchFollowers = async () => {
+    try {
+      const res = await axios.get(
+        "http://127.0.0.1:8000/api/theo-doi/nguoi-theo-doi",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    // 🔥 cập nhật header ngay
-    setUser(prev => ({
-      ...prev,
-      following: prev.following - 1
-    }));
+      setFollowers(res.data || []);
+    } catch (error) {
+      console.error("Lỗi lấy danh sách theo dõi:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // ===============================
+  // FOLLOW / UNFOLLOW
+  // ===============================
+  const toggleFollow = async (userId, isFollowing) => {
+    try {
+      if (isFollowing) {
+        // BỎ THEO DÕI
+        await axios.delete(
+          `http://127.0.0.1:8000/api/theo-doi/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        // THEO DÕI
+        await axios.post(
+          `http://127.0.0.1:8000/api/theo-doi/${userId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
 
+      // CẬP NHẬT UI NGAY
+      setFollowers((prev) =>
+        prev.map((item) =>
+          item.ma_nguoi_dung === userId
+            ? { ...item, da_theo_doi: !isFollowing }
+            : item
+        )
+      );
+    } catch (error) {
+      console.error("Lỗi follow/unfollow:", error);
+    }
+  };
 
-  if (loading) return <p>Đang tải...</p>;
+  if (loading) {
+    return (
+      <div className="text-center mt-5">
+        <div className="spinner-border text-danger" />
+      </div>
+    );
+  }
 
   return (
-    <div className="container mt-3" style={{ maxWidth: 1000 }}>
-    
-      <ul className="list-group list-group-flush">
-        {following.map((item, index) => (
-          <li
-            key={index}
-            className="list-group-item d-flex align-items-center"
-          >
-            <img
-              src={item.anh_dai_dien}
-              alt="avatar"
-              className="rounded-circle me-3"
-              width={48}
-              height={48}
-            />
-            <div className="flex-grow-1">
-              <div className="fw-bold">{item.ten_nguoi_dung}</div>
-            </div>
-            <button
-              className="btn btn-outline-danger btn-sm rounded-pill"
-              onClick={() => handleUnfollow(item.ma_nguoi_dung)}
+    <div className="container py-4" style={{ maxWidth: 650 }}>
+      {/* HEADER */}
+      <div className="d-flex align-items-center mb-4">
+        <button
+          className="btn btn-light rounded-circle me-3"
+          onClick={() => navigate(-1)}
+        >
+          ←
+        </button>
+        <h5 className="mb-0 fw-bold flex-grow-1 text-center">
+          Người theo dõi bạn
+        </h5>
+      </div>
+
+      {/* DANH SÁCH */}
+      {followers.length > 0 ? (
+        <div className="list-group list-group-flush shadow-sm rounded-3">
+          {followers.map((item) => (
+            <div
+              key={item.ma_nguoi_dung}
+              className="list-group-item d-flex align-items-center py-3"
             >
-              Hủy theo dõi
-            </button>
-          </li>
-        ))}
-      </ul>
+              {/* AVATAR */}
+              <img
+                src={
+                  item.anh_dai_dien ||
+                  "https://ui-avatars.com/api/?name=" +
+                    item.ten_nguoi_dung
+                }
+                alt="avatar"
+                className="rounded-circle me-3"
+                width={52}
+                height={52}
+                style={{ objectFit: "cover" }}
+              />
+
+              {/* INFO */}
+              <div className="flex-grow-1">
+                <div className="fw-semibold">
+                  {item.ten_nguoi_dung}
+                </div>
+                <div className="text-muted small">
+                  @{item.username}
+                </div>
+              </div>
+
+              {/* ACTION */}
+              <button
+                className={`btn btn-sm rounded-pill ${
+                  item.da_theo_doi
+                    ? "btn-outline-secondary"
+                    : "btn-danger"
+                }`}
+                onClick={() =>
+                  toggleFollow(
+                    item.ma_nguoi_dung,
+                    item.da_theo_doi
+                  )
+                }
+              >
+                {item.da_theo_doi ? "Bỏ theo dõi" : "Follow lại"}
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-muted mt-5">
+          <i className="bi bi-people fs-1 d-block mb-2" />
+          Chưa có người theo dõi
+        </div>
+      )}
     </div>
   );
 }
