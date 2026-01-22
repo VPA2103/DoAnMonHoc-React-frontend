@@ -1,87 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const BlogListPage = () => {
-  const [danhSachBlog, setDanhSachBlog] = useState([]);
-  const [dangTai, setDangTai] = useState(true);
-  const [trangThaiTheoDoi, setTrangThaiTheoDoi] = useState({});
+export default function DanhSachTheoDoi() {
+  const [followers, setFollowers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    taiDanhSachBlog();
+    fetchFollowers();
   }, []);
 
   // ===============================
-  // LẤY DANH SÁCH BLOG
+  // LẤY DANH SÁCH NGƯỜI THEO DÕI MÌNH
   // ===============================
-  const taiDanhSachBlog = async () => {
+  const fetchFollowers = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/blogs");
+      const res = await axios.get(
+        "http://127.0.0.1:8000/api/theo-doi/nguoi-theo-doi",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      const data = Array.isArray(res.data)
-        ? res.data
-        : res.data.blogs || [];
-
-      setDanhSachBlog(data);
-
-      if (token) {
-        khoiTaoTrangThaiTheoDoi(data);
-      }
+      setFollowers(res.data || []);
     } catch (error) {
-      console.error("Lỗi tải blog:", error);
+      console.error("Lỗi lấy danh sách theo dõi:", error);
     } finally {
-      setDangTai(false);
+      setLoading(false);
     }
   };
 
   // ===============================
-  // KIỂM TRA TRẠNG THÁI THEO DÕI
+  // FOLLOW / UNFOLLOW
   // ===============================
-  const khoiTaoTrangThaiTheoDoi = async (blogs) => {
-    const ketQua = {};
-
-    for (const blog of blogs) {
-      const maTacGia = blog.ma_nguoi_dung;
-      if (!maTacGia) continue;
-
-      try {
-        const res = await axios.get(
-          `http://localhost:8000/api/theo-doi/check/${maTacGia}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        ketQua[maTacGia] = res.data.is_following;
-      } catch {
-        ketQua[maTacGia] = false;
-      }
-    }
-
-    setTrangThaiTheoDoi(ketQua);
-  };
-
-  // ===============================
-  // THEO DÕI / BỎ THEO DÕI
-  // ===============================
-  const xuLyTheoDoi = async (e, maTacGia) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!token) {
-      alert("Vui lòng đăng nhập để theo dõi");
-      return;
-    }
-
+  const toggleFollow = async (userId, isFollowing) => {
     try {
-      if (trangThaiTheoDoi[maTacGia]) {
+      if (isFollowing) {
         // BỎ THEO DÕI
         await axios.delete(
-          `http://localhost:8000/api/theo-doi/${maTacGia}`,
+          `http://127.0.0.1:8000/api/theo-doi/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -91,7 +54,7 @@ const BlogListPage = () => {
       } else {
         // THEO DÕI
         await axios.post(
-          `http://localhost:8000/api/theo-doi/${maTacGia}`,
+          `http://127.0.0.1:8000/api/theo-doi/${userId}`,
           {},
           {
             headers: {
@@ -101,117 +64,99 @@ const BlogListPage = () => {
         );
       }
 
-      // cập nhật UI ngay
-      setTrangThaiTheoDoi((prev) => ({
-        ...prev,
-        [maTacGia]: !prev[maTacGia],
-      }));
+      // CẬP NHẬT UI NGAY
+      setFollowers((prev) =>
+        prev.map((item) =>
+          item.ma_nguoi_dung === userId
+            ? { ...item, da_theo_doi: !isFollowing }
+            : item
+        )
+      );
     } catch (error) {
-      console.error("Lỗi theo dõi:", error.response?.data || error);
+      console.error("Lỗi follow/unfollow:", error);
     }
   };
 
-  // ===============================
-  // RENDER
-  // ===============================
+  if (loading) {
+    return (
+      <div className="text-center mt-5">
+        <div className="spinner-border text-danger" />
+      </div>
+    );
+  }
+
   return (
-    <div className="container py-5">
-      <h4 className="fw-bold text-center mb-4">
-        Blog Ẩm Thực & Chia Sẻ
-      </h4>
+    <div className="container py-4" style={{ maxWidth: 650 }}>
+      {/* HEADER */}
+      <div className="d-flex align-items-center mb-4">
+        <button
+          className="btn btn-light rounded-circle me-3"
+          onClick={() => navigate(-1)}
+        >
+          ←
+        </button>
+        <h5 className="mb-0 fw-bold flex-grow-1 text-center">
+          Người theo dõi bạn
+        </h5>
+      </div>
 
-      {dangTai ? (
-        <div className="text-center">
-          <div className="spinner-border text-danger" />
-        </div>
-      ) : (
-        <div className="row g-4">
-          {danhSachBlog.map((blog) => {
-            const maBlog = blog.ma_blog;
-            const maTacGia = blog.ma_nguoi_dung;
+      {/* DANH SÁCH */}
+      {followers.length > 0 ? (
+        <div className="list-group list-group-flush shadow-sm rounded-3">
+          {followers.map((item) => (
+            <div
+              key={item.ma_nguoi_dung}
+              className="list-group-item d-flex align-items-center py-3"
+            >
+              {/* AVATAR */}
+              <img
+                src={
+                  item.anh_dai_dien ||
+                  "https://ui-avatars.com/api/?name=" +
+                    item.ten_nguoi_dung
+                }
+                alt="avatar"
+                className="rounded-circle me-3"
+                width={52}
+                height={52}
+                style={{ objectFit: "cover" }}
+              />
 
-            return (
-              <div key={maBlog} className="col-12 col-md-6 col-lg-3">
-                <div className="card h-100 border-0 shadow-sm">
-                  {/* ẢNH */}
-                  {blog.hinh_anh_url && (
-                    <img
-                      src={blog.hinh_anh_url}
-                      alt={blog.tieu_de}
-                      className="card-img-top"
-                      style={{ height: 180, objectFit: "cover" }}
-                    />
-                  )}
-
-                  <div className="card-body d-flex flex-column">
-                    {/* NGÀY + THEO DÕI */}
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <small className="text-muted">
-                        {blog.created_at
-                          ? new Date(blog.created_at).toLocaleDateString(
-                              "vi-VN"
-                            )
-                          : ""}
-                      </small>
-
-                      {maTacGia && (
-                        <button
-                          onClick={(e) => xuLyTheoDoi(e, maTacGia)}
-                          className="btn btn-link p-0 text-decoration-none d-flex align-items-center gap-1"
-                          style={{
-                            fontSize: "0.75rem",
-                            color: trangThaiTheoDoi[maTacGia]
-                              ? "#198754"
-                              : "#0d6efd",
-                          }}
-                        >
-                          <i
-                            className={`bi ${
-                              trangThaiTheoDoi[maTacGia]
-                                ? "bi-check-circle-fill"
-                                : "bi-plus-circle"
-                            }`}
-                          />
-                          {trangThaiTheoDoi[maTacGia]
-                            ? "Đã theo dõi"
-                            : "Theo dõi"}
-                        </button>
-                      )}
-                    </div>
-
-                    {/* TIÊU ĐỀ */}
-                    <h6 className="fw-semibold">
-                      <Link
-                        to={`/blog/${maBlog}`}
-                        className="text-dark text-decoration-none"
-                      >
-                        {blog.tieu_de}
-                      </Link>
-                    </h6>
-
-                    {/* MÔ TẢ */}
-                    <p className="text-secondary small flex-grow-1">
-                      {blog.noi_dung
-                        ? blog.noi_dung.substring(0, 80) + "..."
-                        : ""}
-                    </p>
-
-                    {/* CTA */}
-                    <Link
-                      to={`/blog/${maBlog}`}
-                      className="btn btn-outline-dark btn-sm mt-auto"
-                    >
-                      Xem chi tiết
-                    </Link>
-                  </div>
+              {/* INFO */}
+              <div className="flex-grow-1">
+                <div className="fw-semibold">
+                  {item.ten_nguoi_dung}
+                </div>
+                <div className="text-muted small">
+                  @{item.username}
                 </div>
               </div>
-            );
-          })}
+
+              {/* ACTION */}
+              <button
+                className={`btn btn-sm rounded-pill ${
+                  item.da_theo_doi
+                    ? "btn-outline-secondary"
+                    : "btn-danger"
+                }`}
+                onClick={() =>
+                  toggleFollow(
+                    item.ma_nguoi_dung,
+                    item.da_theo_doi
+                  )
+                }
+              >
+                {item.da_theo_doi ? "Bỏ theo dõi" : "Follow lại"}
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-muted mt-5">
+          <i className="bi bi-people fs-1 d-block mb-2" />
+          Chưa có người theo dõi
         </div>
       )}
     </div>
   );
-};
-
-export default BlogListPage;
+}
