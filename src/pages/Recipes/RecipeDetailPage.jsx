@@ -14,6 +14,9 @@ const RecipeDetailPage = () => {
   // ===== CHI TIẾT =====
   const [recipe, setRecipe] = useState(null);
 
+  // ===== FOLLOW =====
+  const [isFollowing, setIsFollowing] = useState(false);
+
   // ===== BÌNH LUẬN =====
   const [binhLuans, setBinhLuans] = useState([]);
   const [noiDung, setNoiDung] = useState("");
@@ -32,10 +35,53 @@ const RecipeDetailPage = () => {
     if (token) fetchMyRating();
   }, [id]);
 
+  // Khi đã có recipe → mới check follow
+  useEffect(() => {
+    if (token && recipe) {
+      checkFollowing();
+    }
+  }, [recipe]);
+
   // ===== LOAD CHI TIẾT =====
   const fetchDetail = async () => {
     const res = await axios.get(`${API}/cong-thucc/${id}`);
     setRecipe(res.data.data);
+  };
+
+  // ===== CHECK FOLLOW =====
+  const checkFollowing = async () => {
+    const res = await axios.get(`${API}/user/following`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const authorId = recipe?.tac_gia?.ma_nguoi_dung;
+    setIsFollowing(
+      res.data.data.some((u) => u.ma_nguoi_dung === authorId)
+    );
+  };
+
+  // ===== TOGGLE FOLLOW =====
+  const handleFollow = async () => {
+    const authorId = recipe?.tac_gia?.ma_nguoi_dung;
+    if (!authorId) return;
+
+    try {
+      if (isFollowing) {
+        await axios.delete(`${API}/unfollow/${authorId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setIsFollowing(false);
+      } else {
+        await axios.post(
+          `${API}/follow/${authorId}`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setIsFollowing(true);
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Lỗi theo dõi");
+    }
   };
 
   // ===== LOAD BÌNH LUẬN =====
@@ -124,6 +170,8 @@ const RecipeDetailPage = () => {
 
   if (!recipe) return <p>Đang tải...</p>;
 
+  const author = recipe.tac_gia;
+
   return (
     <div style={{ maxWidth: 900, margin: "40px auto", padding: 20 }}>
       <h1 style={{ textAlign: "center" }}>{recipe.ten_cong_thuc}</h1>
@@ -142,64 +190,85 @@ const RecipeDetailPage = () => {
         }}
       />
 
+      {/* ===== TÁC GIẢ + FOLLOW ===== */}
+      {author && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 12,
+          }}
+        >
+          <img
+            src={author.anh_dai_dien}
+            alt=""
+            style={{ width: 48, height: 48, borderRadius: "50%" }}
+          />
+
+          <div>
+            <b>{author.ten_nguoi_dung}</b>
+
+            {token &&
+              user?.ma_nguoi_dung !== author.ma_nguoi_dung && (
+                <div>
+                  <button
+                    onClick={handleFollow}
+                    style={{
+                      marginTop: 4,
+                      padding: "4px 12px",
+                      borderRadius: 20,
+                      border: "none",
+                      cursor: "pointer",
+                      background: isFollowing ? "#ccc" : "#1877f2",
+                      color: isFollowing ? "#000" : "#fff",
+                    }}
+                  >
+                    {isFollowing ? "Đang theo dõi" : "Theo dõi"}
+                  </button>
+                </div>
+              )}
+          </div>
+        </div>
+      )}
+
       {/* ===== THÔNG TIN ===== */}
       <p>{recipe.mo_ta}</p>
-      <p><b>Độ khó:</b> {recipe.do_kho}</p>
-      <p><b>Thời gian:</b> {recipe.thoi_gian_nau} phút</p>
-      <p><b>Tác giả:</b> {recipe.tac_gia?.ten_nguoi_dung}</p>
+      <p>
+        <b>Độ khó:</b> {recipe.do_kho}
+      </p>
+      <p>
+        <b>Thời gian:</b> {recipe.thoi_gian_nau} phút
+      </p>
 
       {/* ===== ĐÁNH GIÁ ===== */}
       <hr />
-      <h3 style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        ⭐ Đánh giá
-      </h3>
+      <h3>⭐ Đánh giá</h3>
 
-      <p style={{ color: "#555" }}>
+      <p>
         Trung bình: <b>{avgStar}</b> ⭐ ({totalRating} lượt)
       </p>
 
       {token ? (
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* SAO */}
-          <div style={{ display: "flex", gap: 6 }}>
-            {[1, 2, 3, 4, 5].map((s) => (
-              <span
-                key={s}
-                onClick={() => setStar(s)}
-                onMouseEnter={() => setStar(s)}
-                style={{
-                  fontSize: 34,
-                  cursor: "pointer",
-                  transition: "0.2s",
-                  color: s <= star ? "#f5b301" : "#ddd",
-                }}
-              >
-                ★
-              </span>
-            ))}
-          </div>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {[1, 2, 3, 4, 5].map((s) => (
+            <span
+              key={s}
+              onClick={() => setStar(s)}
+              style={{
+                fontSize: 32,
+                cursor: "pointer",
+                color: s <= star ? "#f5b301" : "#ddd",
+              }}
+            >
+              ★
+            </span>
+          ))}
 
-          {/* BUTTON */}
-          <button
-            onClick={submitRating}
-            style={{
-              padding: "8px 16px",
-              borderRadius: 20,
-              border: "none",
-              background: "#f5b301",
-              color: "#fff",
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "0.2s",
-            }}
-            onMouseOver={(e) => (e.target.style.background = "#e0a800")}
-            onMouseOut={(e) => (e.target.style.background = "#f5b301")}
-          >
-            Gửi đánh giá
-          </button>
+          <button onClick={submitRating}>Gửi đánh giá</button>
         </div>
       ) : (
-        <p style={{ color: "#999" }}>🔒 Đăng nhập để đánh giá</p>
+        <p>🔒 Đăng nhập để đánh giá</p>
       )}
 
       {/* ===== BÌNH LUẬN ===== */}
@@ -207,7 +276,7 @@ const RecipeDetailPage = () => {
       <h3>💬 Bình luận</h3>
 
       {binhLuans.map((bl) => (
-        <div key={bl.ma_binh_luan} style={{ borderBottom: "1px solid #eee", paddingBottom: 8 }}>
+        <div key={bl.ma_binh_luan}>
           <b>{bl.nguoi_dung?.ten_nguoi_dung}</b>
           <p>{bl.noi_dung}</p>
 
@@ -221,7 +290,6 @@ const RecipeDetailPage = () => {
               >
                 ✏️
               </button>
-
               <button onClick={() => handleDelete(bl.ma_binh_luan)}>
                 🗑️
               </button>
@@ -231,7 +299,7 @@ const RecipeDetailPage = () => {
       ))}
 
       {token && (
-        <div style={{ marginTop: 10 }}>
+        <>
           <textarea
             rows="3"
             value={noiDung}
@@ -242,7 +310,7 @@ const RecipeDetailPage = () => {
           <button onClick={handleSubmitBinhLuan}>
             {editId ? "Cập nhật" : "Gửi"}
           </button>
-        </div>
+        </>
       )}
     </div>
   );
