@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Badge from "react-bootstrap/Badge";
 
 const DanhSachBlog = () => {
   const [blogs, setBlogs] = useState([]);

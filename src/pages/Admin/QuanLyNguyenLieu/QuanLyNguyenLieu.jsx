@@ -1,3 +1,4 @@
+// QuanLyNguyenLieu.jsx
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -21,8 +22,11 @@ const QuanLyNguyenLieu = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNguyenLieuList(res.data.data || []);
-    } catch {
-      toast.error("Không tải được nguyên liệu");
+    } catch (err) {
+      console.error("loadNguyenLieu error:", err);
+      // Nếu server trả lỗi kèm message, hiển thị nó
+      const msg = err?.response?.data?.message || "Không tải được nguyên liệu";
+      toast.error(msg);
     }
   };
 
