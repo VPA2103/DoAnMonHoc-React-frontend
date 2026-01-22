@@ -39,7 +39,7 @@ const AdminSidebar = () => {
               `nav-link text-white ${isActive ? "active bg-primary" : ""}`
             }
           >
-            Recipes
+            Danh Sách công thức
           </NavLink>
         </li>
 
@@ -113,6 +113,27 @@ const AdminSidebar = () => {
             }
           >
             Quản lí Lien he
+          </NavLink>
+        </li>
+
+        <li className="nav-item">
+          <NavLink
+            to="quanlycauhoivatraloi"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? "active bg-primary" : ""}`
+            }
+          >
+            Quản lí câu hỏi và trả lời
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink
+            to="quanlitocao"
+            className={({ isActive }) =>
+              `nav-link text-white ${isActive ? "active bg-primary" : ""}`
+            }
+          >
+            Quản lí tố cáo
           </NavLink>
         </li>
         
