@@ -1,4 +1,3 @@
-// QuanLyNguyenLieu.jsx
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -18,16 +17,12 @@ const QuanLyNguyenLieu = () => {
   // Load danh sách nguyên liệu
   const loadNguyenLieu = async () => {
     try {
-      // <-- GỌI ĐÚNG ENDPOINT: /api/nguyen-lieu (không có /admin)
-      const res = await axios.get(`${API_URL}/nguyen-lieu`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      const res = await axios.get(`${API_URL}/admin/nguyen-lieu`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       setNguyenLieuList(res.data.data || []);
-    } catch (err) {
-      console.error("loadNguyenLieu error:", err);
-      // Nếu server trả lỗi kèm message, hiển thị nó
-      const msg = err?.response?.data?.message || "Không tải được nguyên liệu";
-      toast.error(msg);
+    } catch {
+      toast.error("Không tải được nguyên liệu");
     }
   };
 
@@ -44,27 +39,23 @@ const QuanLyNguyenLieu = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        // PUT vào /api/nguyen-lieu/{id}
-        await axios.put(`${API_URL}/nguyen-lieu/${editingId}`, form, {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        });
+        await axios.put(
+          `${API_URL}/admin/nguyen-lieu/${editingId}`,
+          form,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         toast.success("Cập nhật thành công");
       } else {
-        // POST vào /api/nguyen-lieu
-        await axios.post(`${API_URL}/nguyen-lieu`, form, {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        await axios.post(`${API_URL}/admin/nguyen-lieu`, form, {
+          headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("Thêm mới thành công");
       }
       setForm({ ten_nguyen_lieu: "", don_vi_tinh: "" });
       setEditingId(null);
       loadNguyenLieu();
-    } catch (err) {
-      console.error("handleSubmit error:", err);
-      const msg =
-        err?.response?.data?.message ||
-        (editingId ? "Cập nhật thất bại" : "Thêm thất bại");
-      toast.error(msg);
+    } catch {
+      toast.error("Thao tác thất bại");
     }
   };
 
@@ -79,28 +70,22 @@ const QuanLyNguyenLieu = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Xóa nguyên liệu này?")) return;
     try {
-      // DELETE /api/nguyen-lieu/{id}
-      await axios.delete(`${API_URL}/nguyen-lieu/${id}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      await axios.delete(`${API_URL}/admin/nguyen-lieu/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Đã xóa");
       loadNguyenLieu();
-    } catch (err) {
-      console.error("handleDelete error:", err);
-      const msg = err?.response?.data?.message || "Xóa thất bại";
-      toast.error(msg);
+    } catch {
+      toast.error("Xóa thất bại");
     }
   };
 
   return (
     <div className="container mt-4">
       <h3 className="mb-4">Kho Nguyên Liệu (Admin)</h3>
-
+      
       {/* FORM NHẬP LIỆU */}
-      <form
-        onSubmit={handleSubmit}
-        className="row g-2 mb-4 bg-light p-3 rounded"
-      >
+      <form onSubmit={handleSubmit} className="row g-2 mb-4 bg-light p-3 rounded">
         <div className="col-md-5">
           <input
             type="text"
@@ -123,7 +108,7 @@ const QuanLyNguyenLieu = () => {
           />
         </div>
         <div className="col-md-4">
-          <button className="btn btn-primary w-100" type="submit">
+          <button className="btn btn-primary w-100">
             {editingId ? "Cập nhật Nguyên Liệu" : "+ Thêm vào kho"}
           </button>
         </div>
@@ -136,7 +121,7 @@ const QuanLyNguyenLieu = () => {
             <th>ID</th>
             <th>Tên Nguyên Liệu</th>
             <th>Đơn vị tính</th>
-            <th style={{ width: "150px" }}>Hành động</th>
+            <th style={{width: '150px'}}>Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -146,18 +131,8 @@ const QuanLyNguyenLieu = () => {
               <td>{nl.ten_nguyen_lieu}</td>
               <td>{nl.don_vi_tinh}</td>
               <td>
-                <button
-                  className="btn btn-sm btn-warning me-2"
-                  onClick={() => handleEdit(nl)}
-                >
-                  Sửa
-                </button>
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => handleDelete(nl.ma_nguyen_lieu)}
-                >
-                  Xóa
-                </button>
+                <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(nl)}>Sửa</button>
+                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(nl.ma_nguyen_lieu)}>Xóa</button>
               </td>
             </tr>
           ))}
