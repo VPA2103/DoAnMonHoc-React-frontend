@@ -1,3 +1,4 @@
+// QuanLyNguyenLieu.jsx
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -6,241 +7,160 @@ const API_URL = "http://127.0.0.1:8000/api";
 
 const QuanLyNguyenLieu = () => {
   const token = localStorage.getItem("token");
-
-  const [congThucList, setCongThucList] = useState([]);
   const [nguyenLieuList, setNguyenLieuList] = useState([]);
-  const [selectedCongThuc, setSelectedCongThuc] = useState("");
   const [editingId, setEditingId] = useState(null);
 
   const [form, setForm] = useState({
-    ma_cong_thuc: "",
     ten_nguyen_lieu: "",
     don_vi_tinh: "",
-    so_luong: "",
   });
 
-  /* ================= LOAD CÔNG THỨC ================= */
-  const loadCongThuc = async () => {
+  // Load danh sách nguyên liệu
+  const loadNguyenLieu = async () => {
     try {
-      const res = await axios.get(`${API_URL}/admin/cong-thuc`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCongThucList(res.data.data || []);
-    } catch {
-      toast.error("Không tải được công thức");
-    }
-  };
-
-  /* ================= LOAD NGUYÊN LIỆU ================= */
-  const loadNguyenLieu = async (maCongThuc) => {
-    if (!maCongThuc) {
-      setNguyenLieuList([]);
-      return;
-    }
-
-    try {
+      // <-- GỌI ĐÚNG ENDPOINT: /api/nguyen-lieu (không có /admin)
       const res = await axios.get(`${API_URL}/nguyen-lieu`, {
-        params: { ma_cong_thuc: maCongThuc },
-        headers: { Authorization: `Bearer ${token}` },
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       setNguyenLieuList(res.data.data || []);
-    } catch {
-      toast.error("Không tải được nguyên liệu");
+    } catch (err) {
+      console.error("loadNguyenLieu error:", err);
+      // Nếu server trả lỗi kèm message, hiển thị nó
+      const msg = err?.response?.data?.message || "Không tải được nguyên liệu";
+      toast.error(msg);
     }
   };
 
-  /* ================= INIT ================= */
   useEffect(() => {
-    loadCongThuc();
+    loadNguyenLieu();
   }, []);
 
-  /* ================= ĐỔI CÔNG THỨC ================= */
-  useEffect(() => {
-    loadNguyenLieu(selectedCongThuc);
-    setForm((prev) => ({
-      ...prev,
-      ma_cong_thuc: selectedCongThuc,
-    }));
-    setEditingId(null);
-  }, [selectedCongThuc]);
-
-  /* ================= HANDLE INPUT ================= */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectCongThuc = (e) => {
-    setSelectedCongThuc(e.target.value);
-  };
-
-  /* ================= THÊM / SỬA ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!form.ma_cong_thuc) {
-      toast.warning("Vui lòng chọn công thức");
-      return;
-    }
-
     try {
       if (editingId) {
-        await axios.put(
-          `${API_URL}/nguyen-lieu/${editingId}`,
-          form,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        toast.success("Cập nhật nguyên liệu thành công");
-      } else {
-        await axios.post(`${API_URL}/nguyen-lieu`, form, {
-          headers: { Authorization: `Bearer ${token}` },
+        // PUT vào /api/nguyen-lieu/{id}
+        await axios.put(`${API_URL}/nguyen-lieu/${editingId}`, form, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
-        toast.success("Thêm nguyên liệu thành công");
+        toast.success("Cập nhật thành công");
+      } else {
+        // POST vào /api/nguyen-lieu
+        await axios.post(`${API_URL}/nguyen-lieu`, form, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        toast.success("Thêm mới thành công");
       }
-
-      setForm({
-        ma_cong_thuc: selectedCongThuc,
-        ten_nguyen_lieu: "",
-        don_vi_tinh: "",
-        so_luong: "",
-      });
+      setForm({ ten_nguyen_lieu: "", don_vi_tinh: "" });
       setEditingId(null);
-      loadNguyenLieu(selectedCongThuc);
-    } catch {
-      toast.error("Thao tác thất bại");
+      loadNguyenLieu();
+    } catch (err) {
+      console.error("handleSubmit error:", err);
+      const msg =
+        err?.response?.data?.message ||
+        (editingId ? "Cập nhật thất bại" : "Thêm thất bại");
+      toast.error(msg);
     }
   };
 
-  /* ================= SỬA ================= */
   const handleEdit = (nl) => {
     setEditingId(nl.ma_nguyen_lieu);
     setForm({
-      ma_cong_thuc: selectedCongThuc,
       ten_nguyen_lieu: nl.ten_nguyen_lieu,
       don_vi_tinh: nl.don_vi_tinh,
-      so_luong: nl.so_luong,
     });
   };
 
-  /* ================= XÓA ================= */
   const handleDelete = async (id) => {
-    if (!window.confirm("Bạn chắc chắn muốn xóa nguyên liệu này?")) return;
-
+    if (!window.confirm("Xóa nguyên liệu này?")) return;
     try {
+      // DELETE /api/nguyen-lieu/{id}
       await axios.delete(`${API_URL}/nguyen-lieu/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-      toast.success("Xóa nguyên liệu thành công");
-      loadNguyenLieu(selectedCongThuc);
-    } catch {
-      toast.error("Xóa thất bại");
+      toast.success("Đã xóa");
+      loadNguyenLieu();
+    } catch (err) {
+      console.error("handleDelete error:", err);
+      const msg = err?.response?.data?.message || "Xóa thất bại";
+      toast.error(msg);
     }
   };
 
   return (
     <div className="container mt-4">
-      <h3 className="mb-4">Quản lý nguyên liệu theo công thức</h3>
+      <h3 className="mb-4">Kho Nguyên Liệu (Admin)</h3>
 
-      {/* FORM */}
-      <form onSubmit={handleSubmit} className="row g-2 mb-4">
-        <div className="col-md-3">
-          <select
-            className="form-select"
-            value={selectedCongThuc}
-            onChange={handleSelectCongThuc}
-          >
-            <option value="">-- Chọn công thức --</option>
-            {congThucList.map((ct) => (
-              <option key={ct.ma_cong_thuc} value={ct.ma_cong_thuc}>
-                {ct.ten_cong_thuc}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="col-md-3">
+      {/* FORM NHẬP LIỆU */}
+      <form
+        onSubmit={handleSubmit}
+        className="row g-2 mb-4 bg-light p-3 rounded"
+      >
+        <div className="col-md-5">
           <input
             type="text"
             name="ten_nguyen_lieu"
             className="form-control"
-            placeholder="Tên nguyên liệu"
+            placeholder="Tên nguyên liệu (Ví dụ: Thịt bò, Đường...)"
             value={form.ten_nguyen_lieu}
             onChange={handleChange}
             required
           />
         </div>
-
-        <div className="col-md-2">
+        <div className="col-md-3">
           <input
             type="text"
             name="don_vi_tinh"
             className="form-control"
-            placeholder="Đơn vị"
+            placeholder="Đơn vị (kg, gam, muỗng...)"
             value={form.don_vi_tinh}
             onChange={handleChange}
           />
         </div>
-
-        <div className="col-md-2">
-          <input
-            type="number"
-            name="so_luong"
-            className="form-control"
-            placeholder="Số lượng"
-            value={form.so_luong}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="col-md-2">
-          <button className="btn btn-primary w-100">
-            {editingId ? "Cập nhật" : "Lưu"}
+        <div className="col-md-4">
+          <button className="btn btn-primary w-100" type="submit">
+            {editingId ? "Cập nhật Nguyên Liệu" : "+ Thêm vào kho"}
           </button>
         </div>
       </form>
 
-      {/* TABLE */}
-      <table className="table table-bordered">
+      {/* DANH SÁCH */}
+      <table className="table table-bordered table-hover">
         <thead className="table-dark">
           <tr>
             <th>ID</th>
-            <th>Nguyên liệu</th>
-            <th>Số lượng</th>
-            <th>Đơn vị</th>
-            <th>Hành động</th>
+            <th>Tên Nguyên Liệu</th>
+            <th>Đơn vị tính</th>
+            <th style={{ width: "150px" }}>Hành động</th>
           </tr>
         </thead>
         <tbody>
-          {nguyenLieuList.length === 0 ? (
-            <tr>
-              <td colSpan="5" className="text-center">
-                Chưa có nguyên liệu
+          {nguyenLieuList.map((nl) => (
+            <tr key={nl.ma_nguyen_lieu}>
+              <td>{nl.ma_nguyen_lieu}</td>
+              <td>{nl.ten_nguyen_lieu}</td>
+              <td>{nl.don_vi_tinh}</td>
+              <td>
+                <button
+                  className="btn btn-sm btn-warning me-2"
+                  onClick={() => handleEdit(nl)}
+                >
+                  Sửa
+                </button>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => handleDelete(nl.ma_nguyen_lieu)}
+                >
+                  Xóa
+                </button>
               </td>
             </tr>
-          ) : (
-            nguyenLieuList.map((nl) => (
-              <tr key={nl.ma_nguyen_lieu}>
-                <td>{nl.ma_nguyen_lieu}</td>
-                <td>{nl.ten_nguyen_lieu}</td>
-                <td>{nl.so_luong}</td>
-                <td>{nl.don_vi_tinh}</td>
-                <td>
-                  <button
-                    className="btn btn-warning btn-sm me-2"
-                    onClick={() => handleEdit(nl)}
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(nl.ma_nguyen_lieu)}
-                  >
-                    Xóa
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
     </div>
