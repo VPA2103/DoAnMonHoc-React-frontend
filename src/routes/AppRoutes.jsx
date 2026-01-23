@@ -49,12 +49,14 @@ import DanhSachBlog from '../pages/User/QuanLyBlog/DanhSachBlog';
 import ThemSuaBlog from '../pages/User/QuanLyBlog/ThemSuaBlog';
 import ChiTietBlog from '../pages/User/QuanLyBlog/ChiTietBlog';
 import BlogListPage from "../pages/User/QuanLyBlog/BlogListPage";
+import TaoCongThuc from '../pages/User/NguyenLieu/TaoCongThuc';
 // import QuanLyDanhGia from "../pages/User/QuanLyDanhGia/QuanLyDanhGia";
 import QuanLyBuocNau from '../pages/User/QuanLyBuocNau/QuanLyBuocNau';
 import QuanLyCauHoi from "../pages/User/QuanLyCauHoi/QuanLyCauHoi";
 import QuanLyCauHoiVaTraLoi from "../pages/Admin/QuanLyCauHoiVaTraLoi/QuanLyCauHoiVaTraLoi";
 import QuanLyDanhGia from "../pages/User/QuanLyDanhGia/QuanLyDanhGia";
 import QuanLyToCao from "../pages/Admin/QuanLyToCao/QuanLyToCao";
+import QuanLyNguyenLieuUser from "../pages/User/NguyenLieu/QuanLyNguyenLieuUser";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -122,6 +124,7 @@ const AppRoutes = () => {
             <Route path="them" element={<CreateCongThuc />} />
             <Route path="sua/:id" element={<CongThucEdit />} />
           <Route path="buoc-nau/:id" element={<QuanLyBuocNau />} />
+          <Route path="tao-moi" element={<TaoCongThuc />} />
           </Route>
           <Route path="kehoachbuaan">
             <Route index element={<KeHoachBuaAn />} />
@@ -136,6 +139,7 @@ const AppRoutes = () => {
             <Route path="xem/:id" element={<ChiTietBlog />} />          
             
             </Route>
+          <Route path="/user/quanlynguyenlieu" element={<QuanLyNguyenLieuUser />}/>
           <Route path="quan-ly/binh-luan" element={<QuanLyBinhLuan />} />
           <Route path="quanlibuocnau" element={<QuanLyBuocNau />} />
           <Route path="favorites" element={<QuanLyYeuThich />} />
